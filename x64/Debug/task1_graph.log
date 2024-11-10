@@ -1,0 +1,4 @@
+﻿  main.cpp
+C:\Users\ekuli\source\repos\task1_graph\task1_graph\graph\graph.h(34,1): warning C4267: инициализация: преобразование из "size_t" в "int"; возможна потеря данных
+C:\Users\ekuli\source\repos\task1_graph\task1_graph\graph\graph.h(228,1): warning C4267: аргумент: преобразование из "size_t" в "int"; возможна потеря данных
+  task1_graph.vcxproj -> C:\Users\ekuli\source\repos\task1_graph\x64\Debug\task1_graph.exe

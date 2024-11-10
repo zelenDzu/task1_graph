@@ -1,0 +1,5 @@
+enum edgeType
+{
+    DIRECTIONAL,
+    BIDIRECTIONAL,
+};
