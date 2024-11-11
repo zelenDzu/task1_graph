@@ -1,7 +1,7 @@
 #pragma once
 #include "shape.h"
-#include "graph_drawer_engine.h"
 
+class graphDrawerEngine;
 /**
  * Команда, которая выполняется на движке
  */
@@ -13,7 +13,7 @@ struct drawerCommand
 
     drawerCommand(graphDrawerEngine* engine) : engine{engine} {}
 
-    ~drawerCommand() = default;
+    virtual ~drawerCommand() = default;
 
     virtual void execute() const = 0;
 };

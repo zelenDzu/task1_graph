@@ -5,12 +5,16 @@
  */
 struct point2D final
 {
-    const int x;
-    const int y;
+    const float x;
+    const float y;
 
-    point2D() = delete; // запрет писать пустую конструкцию
+    point2D() = delete;
 
-    point2D(int x, int y) : x{x}, y{y} {}
+    point2D(const float x, const float y)
+        : x{x}
+        , y{y}
+    {
+    }
 
     ~point2D() = default;
 
@@ -19,9 +23,8 @@ struct point2D final
      * @param other Конец отрезка
      * @returns Средняя точка
      */
-    const point2D get_middle_point(point2D other) const //означает что ничего не изменяется внутри метода
+    point2D get_middle_point(const point2D other) const
     {
-        point2D middle_point = point2D(other.x - x, other.y - y);
-        return middle_point;
+        return {other.x - x, other.y - y};
     }
 };
