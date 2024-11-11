@@ -91,39 +91,39 @@ private:
 #define FONT_SIZE 14
 
 public:
-    unsigned int drawCircle(const float radius,
-                            const float x,
-                            const float y,
-                            const sf::Color& color)
+    unsigned int draw_circle(const float radius,
+                             const float x,
+                             const float y,
+                             const sf::Color& color)
     {
-        auto circle = new sf::CircleShape(radius);
+        const auto circle = new sf::CircleShape(radius);
         circle->setPosition(x, y);
         circle->setFillColor(color);
         return frame.push(circle);
     }
 
-    unsigned int drawLine(const float length,
-                          const float width,
-                          const float x,
-                          const float y,
-                          const float rotation,
-                          const sf::Color& color)
+    unsigned int draw_line(const float length,
+                           const float width,
+                           const float x,
+                           const float y,
+                           const float rotation,
+                           const sf::Color& color)
     {
-        auto line = new sf::RectangleShape({length, width});
+        const auto line = new sf::RectangleShape({length, width});
         line->setPosition({x, y});
         line->setRotation(rotation);
         line->setFillColor(color);
         return frame.push(line);
     }
 
-    unsigned int drawArrow(const float xStart,
-                           const float yStart,
-                           const float xEnd,
-                           const float yEnd,
-                           const float width,
-                           const sf::Color& color)
+    unsigned int draw_arrow(const float xStart,
+                            const float yStart,
+                            const float xEnd,
+                            const float yEnd,
+                            const float width,
+                            const sf::Color& color)
     {
-        auto arrow = new sf::ConvexShape();
+        const auto arrow = new sf::ConvexShape();
         arrow->setPointCount(N_ARROW_SHAPE_POINTS);
         // TODO: Сформировать фигуру для рендера стрелки
         arrow->setPoint(0, {xStart - width / 2, yStart - width / 2});
@@ -137,15 +137,48 @@ public:
         return frame.push(arrow);
     }
 
-    unsigned int drawLabel(const std::string& label,
-                           const float x,
-                           const float y,
-                           const sf::Color& color)
+    unsigned int draw_label(const std::string& label,
+                            const float x,
+                            const float y,
+                            const sf::Color& color)
     {
-        auto text = new sf::Text(label, font, FONT_SIZE);
+        const auto text = new sf::Text(label, font, FONT_SIZE);
         text->setPosition(x, y);
         text->setFillColor(color);
         return frame.push(text);
+    }
+
+    void erase_drawing(const unsigned int id)
+    {
+        const auto drawing = frame.get_drawable(id);
+        frame.erase(id);
+        delete drawing;
+    }
+
+    void recolor_label(const unsigned int id, const sf::Color& color)
+    {
+        frame.get_text(id)->setFillColor(color);
+    }
+
+    void recolor_shape(const unsigned int id, const sf::Color& color)
+    {
+        frame.get_shape(id)->setFillColor(color);
+    }
+
+    void rename_label(const unsigned int id, const std::string& name)
+    {
+        const auto text = frame.get_text(id);
+        const auto previous_name = text->getString();
+        delete previous_name.getData();
+        // TODO: Check if this memory management is correct for SFML sf::String
+        text->setString(name);
+    }
+
+    void replace_shape(const unsigned int id,
+                       const float x,
+                       const float y)
+    {
+        frame.get_shape(id)->setPosition(x, y);
     }
 #pragma endregion drawing_api
 };
