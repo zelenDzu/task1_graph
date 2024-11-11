@@ -2,11 +2,11 @@
 
 std::vector<std::string> alphabet;
 
-void create_alphabet()
+inline void create_alphabet()
 {
     alphabet.clear();
     for (char letter = 'A'; letter <= 'Z'; ++letter) {
-        alphabet.push_back(std::string(1, letter)); 
+        alphabet.emplace_back(1, letter);
     }
 }
 
