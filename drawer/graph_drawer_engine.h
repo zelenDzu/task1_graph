@@ -1,6 +1,7 @@
 #pragma once
 #include <vector>
-#include <stdarg.h>
+#include <cstdarg>
+
 #include "drawer_command.h"
 #include "graph_drawer.h"
 
@@ -9,24 +10,15 @@
  */
 class graphDrawerEngine
 {
-private:
     std::vector<const drawerCommand*> drawing_cache;
 
-    std::vector<shape2D*> drawing_context;
+    std::map<unsigned int, shape2D*> shape_context;
 
-    graphDrawer* drawer;
+    graphDrawer* drawer = nullptr;
 
-    graphDrawerEngine()
-    {
-        //drawing_cache = {};
-        //drawing_context = {};
-    }
+    unsigned int last_index{0};
 
-    ~graphDrawerEngine() 
-    { 
-        //delete drawing_cache;
-        //delete drawing_context;
-    }
+    graphDrawerEngine() = default;
 
     void push_command(const drawerCommand* command)
     {
@@ -36,7 +28,7 @@ private:
     void clear_cache() { drawing_cache.clear(); }
 
 public:
-    static graphDrawerEngine& get_instance() 
+    static graphDrawerEngine& get_instance()
     {
         static graphDrawerEngine INSTANCE;
         return INSTANCE;
@@ -49,32 +41,39 @@ public:
 
     unsigned long add_shape(shape2D* shape)
     {
-        // TODO: Если шейпов будет много, то целочисленный тип переполнится) стандартная библиотека c++ момент
-        // А ещё желательно поменять идентификатор на нормальный, а не size коллекции шейпов
-        unsigned long size = drawing_context.size();
-        drawing_context.push_back(shape);
-        return size;
+        shape_context[++last_index] = shape;
+        return last_index;
     }
 
-    graphDrawerEngine* with_commands(const drawerCommand* commands, ...) 
+    graphDrawerEngine* with_commands(const unsigned int n_args,
+                                     const drawerCommand* commands,
+                                     ...)
     {
-        // CHECK if work
         va_list args;
         va_start(args, commands);
-        const drawerCommand* command = va_arg(args, const drawerCommand*);
-        push_command(command); // добавляем команду в кэш нашего движка рисовальщика
+        for (unsigned int i = 0; i < n_args; i++)
+        {
+            // добавляем команду в кэш нашего движка рисовальщика
+            const drawerCommand* command = va_arg(args, const drawerCommand*);
+            push_command(command);
+        }
         va_end(args);
         return this;
     }
 
-    void step() 
+    void step()
     {
-        // TODO: Проверить шаг движка, подогнать под себя. Здесь хорошо дебажить выполнение каждой команды
+        if (drawer->shutdownFlag)
+        {
+            // TODO: Завершение работы
+            return;
+        }
+
         for (const auto& command : drawing_cache)
         {
             command->execute();
         }
         clear_cache();
-        // drawer rerender
+        drawer->render();
     }
 };

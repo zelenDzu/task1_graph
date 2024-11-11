@@ -5,13 +5,18 @@
 /**
  * Обыкновенный шейп нода
  */
-struct nodeShape : public shape2D
+struct nodeShape final : public shape2D
 {
-    double radius;
+    float radius;
 
     nodeShape() = delete;
 
-    nodeShape(std::string* label, point2D initial_point, int color, int radius) : shape2D(label, initial_point, color), radius{radius} {}
-
-    ~nodeShape() = default;
+    nodeShape(std::string* label,
+              const point2D initial_point,
+              const int color,
+              const float radius)
+        : shape2D(label, initial_point, color)
+        , radius{radius}
+    {
+    }
 };
