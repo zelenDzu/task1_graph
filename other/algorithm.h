@@ -1,6 +1,16 @@
 #include <iostream>
 
-typedef struct s_node {
+std::vector<std::string> alphabet;
+
+void create_alphabet()
+{
+    alphabet.clear();
+    for (char letter = 'A'; letter <= 'Z'; ++letter) {
+        alphabet.push_back(std::string(1, letter)); 
+    }
+}
+
+struct s_node {
     int val;
     s_node* next;
     s_node* parent;
@@ -16,7 +26,7 @@ typedef struct s_node {
         next = nullptr;
     }
 
-} s_node; 
+}; 
 
 struct stack {
     s_node* top;
