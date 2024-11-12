@@ -1,21 +1,25 @@
 #pragma once
 #include "edge_data.h"
 
-class edgeDataFlow: public edgeData
+class edgeDataFlow : public edgeData
 {
-    public:
-        int flow;
-        int capacity;
+public:
+    int flow{0};
+    int capacity{0};
 
-        edgeDataFlow(int capacity, int flow) : edgeData(), capacity{capacity}, flow{flow} {}
+    edgeDataFlow(const int capacity, const int flow)
+        : edgeData()
+        , flow{flow}
+        , capacity{capacity}
+    {
+    }
 
-        edgeDataFlow() = default;
+    edgeDataFlow() = default;
 
-        ~edgeDataFlow() = default;
-
-        virtual const std::string* to_label() const override 
-        {
-            const std::string result = std::to_string(capacity) + "/" + std::to_string(flow);
-            return new std::string(result);
-        }
+    const std::string* to_label() const override
+    {
+        const std::string result = std::to_string(capacity) + "/" +
+            std::to_string(flow);
+        return new std::string(result);
+    }
 };

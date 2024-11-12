@@ -1,34 +1,52 @@
+#pragma once
 #include <iostream>
 
-std::vector<std::string> alphabet;
+inline std::vector<std::string> alphabet;
 
-void create_alphabet()
+inline void create_alphabet()
 {
     alphabet.clear();
-    for (char letter = 'A'; letter <= 'Z'; ++letter) {
-        alphabet.push_back(std::string(1, letter)); 
+    for (char letter = 'A'; letter <= 'Z'; ++letter)
+    {
+        alphabet.emplace_back(1, letter);
     }
 }
 
-struct s_node {
+struct s_node
+{
     int val;
     s_node* next;
     s_node* parent;
 
-    s_node(int val, s_node* next) : val{ val }, next{ next }, parent{ nullptr }  {}
-    
-    s_node(int val) : val{ val }, next{ nullptr }, parent{ nullptr } {}
+    s_node(const int val, s_node* next)
+        : val{val}
+        , next{next}
+        , parent{nullptr}
+    {
+    }
 
-    s_node() : val{ 0 }, next{ nullptr }, parent{ nullptr } {}
-    
-    ~s_node() 
+    s_node(const int val)
+        : val{val}
+        , next{nullptr}
+        , parent{nullptr}
+    {
+    }
+
+    s_node()
+        : val{0}
+        , next{nullptr}
+        , parent{nullptr}
+    {
+    }
+
+    ~s_node()
     {
         next = nullptr;
     }
+};
 
-}; 
-
-struct stack {
+struct stack
+{
     s_node* top;
 
     stack()
@@ -36,15 +54,16 @@ struct stack {
         top = nullptr;
     }
 
-    bool is_empty()
+    bool is_empty() const
     {
         return top == nullptr;
     }
 
-    int pop() {
+    int pop()
+    {
         if (is_empty()) return INT_MIN;
 
-        s_node* top_node = top;
+        const s_node* top_node = top;
         int val = top_node->val;
         top = top->next;
         delete top_node;
@@ -59,29 +78,31 @@ struct stack {
         }
     }
 
-    void push(int element) {
-        s_node* new_node = new s_node(element,top);
+    void push(const int element)
+    {
+        s_node* new_node = new s_node(element, top);
         top = new_node;
     }
 
-    s_node* stack_top() {
+    s_node* stack_top()
+    {
         return top;
     }
 
-    void show()
+    void show() const
     {
         cout << "Stack" << endl;
-        s_node* v = top;
+        const s_node* v = top;
         while (v)
         {
             cout << v->val << endl;
             v = v->next;
         }
     }
-
 };
 
-struct queue {
+struct queue
+{
     s_node* front;
     s_node* rear;
 
@@ -93,16 +114,18 @@ struct queue {
 
     ~queue()
     {
-        while (!is_empty()) {
+        while (!is_empty())
+        {
             dequeue();
         }
     }
 
-    void enqueue(int value)
+    void enqueue(const int value)
     {
         s_node* new_node = new s_node(value);
 
-        if (rear == nullptr) {
+        if (rear == nullptr)
+        {
             front = rear = new_node;
             return;
         }
@@ -111,7 +134,7 @@ struct queue {
         rear = new_node;
     }
 
-    void enqueue(int value, s_node* parent)
+    void enqueue(const int value, s_node* parent)
     {
         enqueue(value);
         rear->parent = parent;
@@ -137,14 +160,16 @@ struct queue {
 
     s_node* dequeue()
     {
-        if (front == nullptr) {
+        if (front == nullptr)
+        {
             return nullptr;
         }
 
         s_node* front_node = front;
         front = front->next;
 
-        if (front == nullptr) {
+        if (front == nullptr)
+        {
             rear = nullptr;
         }
 
@@ -157,11 +182,8 @@ struct queue {
         return front;
     }
 
-    bool is_empty()
+    bool is_empty() const
     {
         return front == nullptr;
     }
 };
-
-
-
