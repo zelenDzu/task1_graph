@@ -5,14 +5,25 @@
 #include "graph.h"
 #include "node_shape.h"
 #include "algorithm.h"
-//#include <iostream>
 #include <cmath>
 
-constexpr double pi = 3.14159265358979323846;
+#define PI 3.141592f
+#define COUNT(n) (n - 2)
+#define DEG2RAD(n) ((n * PI) / 180)
+#define RAD2DEG(n) ((n * 180) / PI)
+#define X_CENTER 300.0f
+#define Y_CENTER 300.0f
+#define OFFSET 30.0f
+#define BASE_WIDTH 100.0f
+#define BASE_HEIGHT 50.0f
+#define SCALE_WIDTH 10.0f
+#define SCALE_HEIGHT 5.0f
+#define WIDTH(x) (BASE_WIDTH + SCALE_WIDTH * COUNT(x))
+#define HEIGHT(x) (BASE_HEIGHT + SCALE_HEIGHT * COUNT(x))
+#define THETA(x) (2 * PI / COUNT(x))
 
 class drawerCommandFactory
 {
-private:
     graphDrawerEngine* engine;
 
     drawerCommandFactory() = default;
@@ -31,51 +42,46 @@ public:
         this->engine = engine;
     }
 
-    //
-
-    const drawerCreateCommand* get_graph_create_command(const graph* graph) const
+    const drawerCreateCommand* get_graph_create_command(
+        const graph* graph) const
     {
         if (engine == nullptr)
-            throw - 1;
+            throw 1;
 
-        std::vector<nodeShape*> nodes = std::vector<nodeShape*>();
-        
-        int n = graph->nodes.size() - 2;
-        int x_center = 300;
-        int y_center = 300;
-        int offset = 30;
-        int base_width = 100;
-        int base_height = 50;
-        double scale_w = 10;
-        double scale_h = 5;
-        double width = base_width + n * scale_w;
-        double height = base_height + n * scale_h;
-        double theta = 2 * pi / n;
+        std::vector<nodeShape*> nodes;
+        const unsigned int size = graph->nodes.size();
 
-        // first node
+        // First node
         nodes.push_back(new nodeShape(
             &alphabet[0],
-            point2D(x_center - width - offset, y_center),
-            0, 5));
+            point2D(X_CENTER - WIDTH(size) - OFFSET, Y_CENTER),
+            0,
+            5));
 
-        for (int i = 1; i <= n; i++)
+        // Other nodes
+        for (int i = 1; i <= COUNT(size); i++)
         {
             nodes.push_back(new nodeShape(
                 &alphabet[i],
                 point2D(
-                    x_center + width * cos(i * theta), 
-                    y_center + height * sin(i * theta)),
-                0, 5));
+                    X_CENTER + WIDTH(size) * std::cos(
+                        static_cast<float>(i) * THETA(size)),
+                    Y_CENTER + HEIGHT(size) * std::sin(
+                        static_cast<float>(i) * THETA(size))),
+                0,
+                5));
         }
 
+        // Last node
         nodes.push_back(new nodeShape(
-            &alphabet[n + 1],
-            point2D(x_center + width + offset, y_center),
-            0, 5));
+            &alphabet[COUNT(size) + 1],
+            point2D(X_CENTER + WIDTH(size) + OFFSET, Y_CENTER),
+            0,
+            5));
 
-        
         // тут будет return некой команды drawer_graph_create_command, 
-        // которая принимает vector<2d_shape> (ноды и ребра)
+        // которая принимает std::vector<node_shape>& (ноды)
+        // и std::vector<edge_shape>& (рёбра)
         return nullptr;
     }
 
@@ -88,20 +94,19 @@ public:
     // удалить граф остаточный
     // удалить граф обычный
 
-
     const drawerCreateCommand* get_node_create_command(const node* node) const
     {
         // TODO: Описать, как создаются шейпы для наших нодов. Связать логику (нод) и графику (шейп нода)
         // тут же и опредяляется логика того, какие будут КООРДИНАТЫ и всё такое
-        
+
         // Движок нужен для того чтобы команда знала где исполняться
-        if (engine == nullptr) 
-            throw -1;
- 
+        if (engine == nullptr)
+            throw 1;
+
         // create 2d objects from 2d_space and supply command with these shapes
-        return new drawerCreateCommand(engine, 
-                                    // new nodeShape(...аргументы и факты); и переходишь к nodeShape, используешь соответствующий конструктор. А пока 
-                                    nullptr
+        return new drawerCreateCommand(engine,
+                                       // new nodeShape(...аргументы и факты); и переходишь к nodeShape, используешь соответствующий конструктор. А пока
+                                       nullptr
         );
     }
 };
