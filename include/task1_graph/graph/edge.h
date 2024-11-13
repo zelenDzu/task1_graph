@@ -1,8 +1,13 @@
 #pragma once
-#include "edge_type.h"
 #include "edge_data.h"
 
 class node;
+
+enum edgeType
+{
+    DIRECTIONAL,
+    BIDIRECTIONAL,
+};
 
 class edge
 {

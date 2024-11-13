@@ -91,11 +91,11 @@ struct stack
 
     void show() const
     {
-        cout << "Stack" << endl;
+        std::cout << "Stack" << std::endl;
         const s_node* v = top;
         while (v)
         {
-            cout << v->val << endl;
+            std::cout << v->val << std::endl;
             v = v->next;
         }
     }

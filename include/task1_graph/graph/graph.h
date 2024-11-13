@@ -1,8 +1,5 @@
 #pragma once
 #include "node.h"
-#include "edge.h"
-#include "edge_data_flow.h"
-#include "edge_data_single.h"
 #include "algorithm.h"
 
 class graph
