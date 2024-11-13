@@ -14,35 +14,31 @@ FetchContent_Declare(SFML
         SYSTEM)
 FetchContent_MakeAvailable(SFML)
 
-include_directories(2d_space)
-include_directories(drawer)
-include_directories(drawer/drawer_commands)
-include_directories(graph)
-include_directories(other)
+include_directories(include/task1_graph/2d_space)
+include_directories(include/task1_graph/drawer)
+include_directories(include/task1_graph/drawer/drawer_commands)
+include_directories(include/task1_graph/graph)
+include_directories(include/task1_graph/other)
 
 add_executable(task1_graph
-        2d_space/edge_shape.h
-        2d_space/node_shape.h
-        2d_space/point.h
-        2d_space/shape.h
-        drawer/drawer_commands/drawer_command.h
-        drawer/drawer_commands/drawer_command_factory.h
-        drawer/drawer_commands/drawer_create_command.h
-        drawer/drawer_commands/drawer_delete_command.h
-        drawer/drawer_commands/drawer_recolor_command.h
-        drawer/graph_drawer.h
-        drawer/graph_drawer_engine.h
-        drawer/render_frame.h
-        graph/edge.h
-        graph/edge_data.h
-        graph/edge_data_flow.h
-        graph/edge_data_single.h
-        graph/edge_type.h
-        graph/graph.h
-        graph/node.h
-        other/algorithm.cpp
-        other/algorithm.h
-        main.cpp)
+        include/task1_graph/2d_space/point.h
+        include/task1_graph/2d_space/shape.h
+        include/task1_graph/drawer/drawer_commands/drawer_command.h
+        include/task1_graph/drawer/drawer_commands/drawer_command_factory.h
+        include/task1_graph/drawer/graph_drawer.h
+        include/task1_graph/drawer/graph_drawer_engine.h
+        include/task1_graph/drawer/render_frame.h
+        include/task1_graph/graph/edge.h
+        include/task1_graph/graph/edge_data.h
+        include/task1_graph/graph/graph.h
+        include/task1_graph/graph/node.h
+        include/task1_graph/other/algorithm.h
+        src/algorithm.cpp
+        src/main.cpp
+        src/graph.cpp
+        src/drawer_command.cpp
+        src/graph_drawer_engine.cpp
+        src/graph_drawer.cpp)
 
 target_link_libraries(task1_graph PRIVATE sfml-graphics)
 target_compile_features(task1_graph PRIVATE cxx_std_17)
