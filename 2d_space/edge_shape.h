@@ -12,9 +12,9 @@ struct edgeShape final : public shape2D
     edgeShape() = delete;
 
     edgeShape(std::string* label,
-              point2D initial_point,
-              point2D end_point,
-              int color)
+              const point2D initial_point,
+              const point2D end_point,
+              const int color)
         : shape2D(label, initial_point, color)
         , end_point{end_point}
     {

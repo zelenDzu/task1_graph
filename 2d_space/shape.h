@@ -15,13 +15,16 @@ struct shape2D
 
     shape2D() = delete;
 
-    shape2D(std::string* label, point2D initial_point)
+    shape2D(std::string* label,
+            const point2D initial_point)
         : label{label}
         , initial_point{initial_point}
     {
     }
 
-    shape2D(std::string* label, point2D initial_point, int color)
+    shape2D(std::string* label,
+            const point2D initial_point,
+            const int color)
         : label{label}
         , initial_point{initial_point}
         , color{color}
