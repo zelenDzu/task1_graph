@@ -3,10 +3,10 @@
 
 class edgeData
 {
-    public: 
-        edgeData() = default;
+public:
+    edgeData() = default;
 
-        ~edgeData() = default;
+    virtual ~edgeData() noexcept = default;
 
-        virtual const std::string* to_label() const = 0;
+    virtual const std::string* to_label() const = 0;
 };

@@ -4,13 +4,14 @@
 
 class node
 {
-    public:
-        int id;
-        std::vector<edge*> edges; //ребра которые исходят из вершины
+public:
+    unsigned int id;
+    std::vector<edge*> edges;
 
-        node() = default;
+    node() = default;
 
-        node(int id) : id{ id } {}
-
-        ~node() = default;
+    node(const unsigned int id)
+        : id{id}
+    {
+    }
 };

@@ -3,18 +3,19 @@
 
 class edgeDataSingle : public edgeData
 {
-    public:
-        int value;
+public:
+    int value{0};
 
-        edgeDataSingle(int value) : edgeData(), value{value} {}
+    edgeDataSingle(const int value)
+        : edgeData()
+        , value{value}
+    {
+    }
 
-        edgeDataSingle() = default;
+    edgeDataSingle() = default;
 
-        ~edgeDataSingle() = default;
-
-        virtual const std::string* to_label() const override 
-        {
-            const std::string result = std::to_string(value);
-            return new std::string(result);
-        }
+    const std::string* to_label() const override
+    {
+        return new std::string(std::to_string(value));
+    }
 };
