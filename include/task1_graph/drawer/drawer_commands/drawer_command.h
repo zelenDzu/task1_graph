@@ -1,5 +1,6 @@
 #pragma once
 #include "2d_space/shape.h"
+#include <vector>
 
 class graphDrawerEngine;
 
@@ -39,13 +40,14 @@ struct drawerCreateCommand : public drawerCommand
 
 struct drawerDeleteCommand : public drawerCommand
 {
-    unsigned int shape_id;
+    const std::vector<unsigned int> shapes_id;
 
     drawerDeleteCommand() = delete;
 
-    drawerDeleteCommand(graphDrawerEngine* engine, const unsigned int shape_id)
+    drawerDeleteCommand(graphDrawerEngine* engine,
+                        std::vector<unsigned int>&& shapes_id)
         : drawerCommand(engine)
-        , shape_id{shape_id}
+        , shapes_id{shapes_id}
     {
     }
 
@@ -55,16 +57,54 @@ struct drawerDeleteCommand : public drawerCommand
 struct drawerRecolorCommand : public drawerCommand
 {
     unsigned int shape_id;
-    int* color;
+    bool mark;
 
     drawerRecolorCommand() = delete;
 
     drawerRecolorCommand(graphDrawerEngine* engine,
                          const unsigned int shape_id,
-                         int* color)
+                         const bool mark)
         : drawerCommand(engine)
         , shape_id{shape_id}
-        , color{color}
+        , mark{mark}
+    {
+    }
+
+    void execute() const override;
+};
+
+struct drawerCreateGraphCommand : public drawerCommand
+{
+    std::vector<nodeShape*> nodes_to_create;
+    std::vector<edgeShape*> edges_to_create;
+
+    drawerCreateGraphCommand() = delete;
+
+    drawerCreateGraphCommand(graphDrawerEngine* engine,
+                             std::vector<nodeShape*>&& nodes_to_create,
+                             std::vector<edgeShape*>&& edges_to_create)
+        : drawerCommand(engine)
+        , nodes_to_create{nodes_to_create}
+        , edges_to_create{edges_to_create}
+    {
+    }
+
+    void execute() const override;
+};
+
+struct drawerUpdateLabelCommand : public drawerCommand
+{
+    const unsigned int shape_id;
+    const std::string label;
+
+    drawerUpdateLabelCommand() = delete;
+
+    drawerUpdateLabelCommand(graphDrawerEngine* engine,
+                             const unsigned int shape_id,
+                             std::string&& label)
+        : drawerCommand(engine)
+        , shape_id{shape_id}
+        , label{label}
     {
     }
 

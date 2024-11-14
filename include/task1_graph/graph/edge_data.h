@@ -8,7 +8,7 @@ public:
 
     virtual ~edgeData() noexcept = default;
 
-    virtual const std::string* to_label() const = 0;
+    virtual std::string to_label() const = 0;
 };
 
 class edgeDataFlow : public edgeData
@@ -26,11 +26,11 @@ public:
 
     edgeDataFlow() = default;
 
-    const std::string* to_label() const override
+    std::string to_label() const override
     {
         const std::string result = std::to_string(capacity) + "/" +
             std::to_string(flow);
-        return new std::string(result);
+        return std::string(result);
     }
 };
 
@@ -47,8 +47,8 @@ public:
 
     edgeDataSingle() = default;
 
-    const std::string* to_label() const override
+    std::string to_label() const override
     {
-        return new std::string(std::to_string(value));
+        return std::string(std::to_string(value));
     }
 };

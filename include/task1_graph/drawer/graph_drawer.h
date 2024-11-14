@@ -23,6 +23,14 @@ public:
      */
     static constexpr float SHIFT_BETWEEN_EDGES = 6.0f;
 
+    const sf::Color BLUE = sf::Color::Blue;
+
+    const sf::Color YELLOW = sf::Color::Green;
+
+    const sf::Color RED = sf::Color::Red;
+
+    const sf::Color MAGNETA = sf::Color::Magenta;
+
     static graphDrawer& get_instance()
     {
         static graphDrawer INSTANCE;
