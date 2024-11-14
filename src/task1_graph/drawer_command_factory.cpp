@@ -13,8 +13,9 @@ drawerCommandFactory::get_basic_graph_create_command(
     const unsigned int size = graph->nodes.size();
 
     // First node
+    std::string first_node_label = alphabet[0];
     nodes.push_back(new nodeShape(
-        &alphabet[0],
+        std::move(first_node_label),
         point2D(X_CENTER - WIDTH(size) - OFFSET, Y_CENTER),
         0,
         5));
@@ -22,8 +23,9 @@ drawerCommandFactory::get_basic_graph_create_command(
     // Other nodes
     for (int i = 1; i <= COUNT(size); i++)
     {
+        std::string i_node_label = alphabet[i];
         nodes.push_back(new nodeShape(
-            &alphabet[i],
+            std::move(i_node_label),
             point2D(
                 X_CENTER + WIDTH(size) * std::cos(
                     static_cast<float>(i) * THETA(size)),
@@ -34,8 +36,9 @@ drawerCommandFactory::get_basic_graph_create_command(
     }
 
     // Last node
+    std::string last_node_label = alphabet[COUNT(size) + 1];
     nodes.push_back(new nodeShape(
-        &alphabet[COUNT(size) + 1],
+        std::move(last_node_label),
         point2D(X_CENTER + WIDTH(size) + OFFSET, Y_CENTER),
         0,
         5));
