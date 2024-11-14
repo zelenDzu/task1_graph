@@ -44,8 +44,9 @@ drawerCommandFactory::get_basic_graph_create_command(
         5));
 
     // тут будет return некой команды drawer_graph_create_command,
-    // которая принимает std::vector<node_shape>& (ноды)
-    // и std::vector<edge_shape>& (рёбра)
+    // которая принимает std::vector<nodeShape>&& (ноды)
+    // и std::vector<edgeShape>&& (рёбра)
+    // и std::vector<doubleEdgeShape>&& (двойные рёбра)
     return nullptr;
 }
 

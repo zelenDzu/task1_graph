@@ -1,6 +1,36 @@
 #pragma once
+#include <cmath>
+
 #include "point.h"
 #include <string>
+
+/**
+ * Get the X-axes applied offset
+ * @param left_orientation The arrow is from left to right
+ * @param base The basic point to offset
+ * @param offset Offset
+ * @return Applied X-offset to basic point
+ */
+inline float get_offset_x(const bool left_orientation,
+                          const float base,
+                          const float offset)
+{
+    return left_orientation ? base + offset : base - offset;
+}
+
+/**
+ * Get the Y-axes applied offset
+ * @param left_orientation The arrow is from left to right
+ * @param base The basic point to offset
+ * @param offset Offset
+ * @return Applied Y-offset to basic point
+ */
+inline float get_offset_y(const bool left_orientation,
+                          const float base,
+                          const float offset)
+{
+    return left_orientation ? base - offset : base + offset;
+}
 
 /**
  * Фигура в 2-д пространстве
@@ -48,6 +78,7 @@ struct shape2D
 */
 struct edgeShape : public shape2D
 {
+    static constexpr float LABEL_OFFSET{4.0f};
     float width;
     point2D end_point;
 
@@ -65,12 +96,27 @@ struct edgeShape : public shape2D
     }
 
     /**
-     * Определить положение метки названия. По умолчанию initial_point
+     * Определить положение метки названия.
      * @return Положене метки названия
      */
     point2D get_label_point() const override
     {
-        return this->end_point.get_middle_point(this->initial_point);
+        point2D middle_point = end_point.get_middle_point(initial_point);
+        const bool left_orientation = end_point.x > initial_point.x;
+        const float angle = std::atan(
+            (end_point.y - initial_point.y) / (end_point.x - initial_point.x));
+        const float cos = std::cos(angle);
+        const float sin = std::sin(angle);
+        const float cos_angle_offset = LABEL_OFFSET * cos;
+        const float sin_angle_offset = LABEL_OFFSET * sin;
+        return {
+            get_offset_y(left_orientation,
+                         middle_point.x,
+                         cos_angle_offset),
+            get_offset_x(left_orientation,
+                         initial_point.y,
+                         sin_angle_offset)
+        };
     }
 };
 
@@ -122,10 +168,27 @@ struct doubleEdgeShape : public edgeShape
                                          const int color,
                                          const float width)
     {
-        const float xStart = 0.0f;
-        const float yStart = 0.0f;
-        const float xEnd = 1.0f;
-        const float yEnd = 1.0f;
+        // The arrow is "from left to right"
+        const bool left_orientation = end_point.x > initial_point.x;
+        const float angle = std::atan(
+            (end_point.y - initial_point.y) / (end_point.x - initial_point.x));
+        const float cos = std::cos(angle);
+        const float sin = std::sin(angle);
+        const float cos_angle_offset = SHIFT_BETWEEN_EDGES / 2 * cos;
+        const float sin_angle_offset = SHIFT_BETWEEN_EDGES / 2 * sin;
+
+        const float xStart = get_offset_y(left_orientation,
+                                          initial_point.x,
+                                          cos_angle_offset);
+        const float yStart = get_offset_x(left_orientation,
+                                          initial_point.y,
+                                          sin_angle_offset);
+        const float xEnd = get_offset_y(left_orientation,
+                                        end_point.x,
+                                        cos_angle_offset);
+        const float yEnd = get_offset_x(left_orientation,
+                                        end_point.y,
+                                        sin_angle_offset);
 
         return {
             std::move(label), {xStart, yStart},
@@ -148,10 +211,27 @@ struct doubleEdgeShape : public edgeShape
                                           const int color,
                                           const float width)
     {
-        const float xStart = 0.0f;
-        const float yStart = 0.0f;
-        const float xEnd = 1.0f;
-        const float yEnd = 1.0f;
+        // The arrow is "from left to right"
+        const bool left_orientation = end_point.x > initial_point.x;
+        const float angle = std::atan(
+            (end_point.y - initial_point.y) / (end_point.x - initial_point.x));
+        const float cos = std::cos(angle);
+        const float sin = std::sin(angle);
+        const float cos_angle_offset = SHIFT_BETWEEN_EDGES / 2 * cos;
+        const float sin_angle_offset = SHIFT_BETWEEN_EDGES / 2 * sin;
+
+        const float xEnd = get_offset_x(left_orientation,
+                                        initial_point.x,
+                                        cos_angle_offset);
+        const float yEnd = get_offset_y(left_orientation,
+                                        initial_point.y,
+                                        sin_angle_offset);
+        const float xStart = get_offset_x(left_orientation,
+                                          end_point.x,
+                                          cos_angle_offset);
+        const float yStart = get_offset_y(left_orientation,
+                                          end_point.y,
+                                          sin_angle_offset);
 
         return {
             std::move(label), {xStart, yStart},
@@ -160,7 +240,7 @@ struct doubleEdgeShape : public edgeShape
     }
 
     /**
-     * Определить положение метки названия. По умолчанию initial_point
+     * Определить положение метки названия. По умолчанию middle_point
      * @return Положене метки названия
      */
     point2D get_label_point() const override

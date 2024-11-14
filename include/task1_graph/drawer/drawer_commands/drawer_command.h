@@ -47,7 +47,7 @@ struct drawerDeleteCommand : public drawerCommand
     drawerDeleteCommand(graphDrawerEngine* engine,
                         std::vector<unsigned int>&& shapes_id)
         : drawerCommand(engine)
-        , shapes_id{shapes_id}
+        , shapes_id{std::move(shapes_id)}
     {
     }
 
@@ -77,15 +77,19 @@ struct drawerCreateGraphCommand : public drawerCommand
 {
     std::vector<nodeShape*> nodes_to_create;
     std::vector<edgeShape*> edges_to_create;
+    std::vector<doubleEdgeShape*> doubleEdges_to_create;
 
     drawerCreateGraphCommand() = delete;
 
     drawerCreateGraphCommand(graphDrawerEngine* engine,
                              std::vector<nodeShape*>&& nodes_to_create,
-                             std::vector<edgeShape*>&& edges_to_create)
+                             std::vector<edgeShape*>&& edges_to_create,
+                             std::vector<doubleEdgeShape*>&&
+                             doubleEdges_to_create)
         : drawerCommand(engine)
-        , nodes_to_create{nodes_to_create}
-        , edges_to_create{edges_to_create}
+        , nodes_to_create{std::move(nodes_to_create)}
+        , edges_to_create{std::move(edges_to_create)}
+        , doubleEdges_to_create{std::move(doubleEdges_to_create)}
     {
     }
 
@@ -104,7 +108,7 @@ struct drawerUpdateLabelCommand : public drawerCommand
                              std::string&& label)
         : drawerCommand(engine)
         , shape_id{shape_id}
-        , label{label}
+        , label{std::move(label)}
     {
     }
 
