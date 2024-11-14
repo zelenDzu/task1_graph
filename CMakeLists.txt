@@ -14,11 +14,7 @@ FetchContent_Declare(SFML
         SYSTEM)
 FetchContent_MakeAvailable(SFML)
 
-include_directories(include/task1_graph/2d_space)
-include_directories(include/task1_graph/drawer)
-include_directories(include/task1_graph/drawer/drawer_commands)
-include_directories(include/task1_graph/graph)
-include_directories(include/task1_graph/other)
+include_directories(include/task1_graph)
 
 add_executable(task1_graph
         include/task1_graph/2d_space/point.h
@@ -33,12 +29,14 @@ add_executable(task1_graph
         include/task1_graph/graph/graph.h
         include/task1_graph/graph/node.h
         include/task1_graph/other/algorithm.h
-        src/algorithm.cpp
-        src/main.cpp
-        src/graph.cpp
-        src/drawer_command.cpp
-        src/graph_drawer_engine.cpp
-        src/graph_drawer.cpp)
+        src/task1_graph/algorithm.cpp
+        src/task1_graph/graph.cpp
+        src/task1_graph/drawer_command.cpp
+        src/task1_graph/graph_drawer_engine.cpp
+        src/task1_graph/graph_drawer.cpp
+        src/task1_graph/drawer_command_factory.cpp
+        src/main.cpp)
 
 target_link_libraries(task1_graph PRIVATE sfml-graphics)
+
 target_compile_features(task1_graph PRIVATE cxx_std_17)

@@ -1,5 +1,5 @@
 #pragma once
-#include "shape.h"
+#include "2d_space/shape.h"
 
 class graphDrawerEngine;
 
@@ -34,10 +34,7 @@ struct drawerCreateCommand : public drawerCommand
     {
     }
 
-    void execute() const override
-    {
-        engine->add_shape(shape_to_create);
-    }
+    void execute() const override;
 };
 
 struct drawerDeleteCommand : public drawerCommand
@@ -52,9 +49,7 @@ struct drawerDeleteCommand : public drawerCommand
     {
     }
 
-    void execute() const override
-    {
-    }
+    void execute() const override;
 };
 
 struct drawerRecolorCommand : public drawerCommand
@@ -73,7 +68,5 @@ struct drawerRecolorCommand : public drawerCommand
     {
     }
 
-    void execute() const override
-    {
-    }
+    void execute() const override;
 };

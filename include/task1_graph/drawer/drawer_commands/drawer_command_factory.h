@@ -1,8 +1,7 @@
 #pragma once
 #include "drawer_command.h"
-#include "shape.h"
-#include "graph.h"
-#include "algorithm.h"
+#include "graph/graph.h"
+#include "other/algorithm.h"
 #include <cmath>
 
 #define PI 3.141592f
@@ -41,47 +40,7 @@ public:
     }
 
     const drawerCreateCommand* get_graph_create_command(
-        const graph* graph) const
-    {
-        if (engine == nullptr)
-            throw 1;
-
-        std::vector<nodeShape*> nodes;
-        const unsigned int size = graph->nodes.size();
-
-        // First node
-        nodes.push_back(new nodeShape(
-            &alphabet[0],
-            point2D(X_CENTER - WIDTH(size) - OFFSET, Y_CENTER),
-            0,
-            5));
-
-        // Other nodes
-        for (int i = 1; i <= COUNT(size); i++)
-        {
-            nodes.push_back(new nodeShape(
-                &alphabet[i],
-                point2D(
-                    X_CENTER + WIDTH(size) * std::cos(
-                        static_cast<float>(i) * THETA(size)),
-                    Y_CENTER + HEIGHT(size) * std::sin(
-                        static_cast<float>(i) * THETA(size))),
-                0,
-                5));
-        }
-
-        // Last node
-        nodes.push_back(new nodeShape(
-            &alphabet[COUNT(size) + 1],
-            point2D(X_CENTER + WIDTH(size) + OFFSET, Y_CENTER),
-            0,
-            5));
-
-        // тут будет return некой команды drawer_graph_create_command, 
-        // которая принимает std::vector<node_shape>& (ноды)
-        // и std::vector<edge_shape>& (рёбра)
-        return nullptr;
-    }
+        const graph* graph) const;
 
     // отрисовка графа обычного
     // орисовка графа остаточного
@@ -91,13 +50,4 @@ public:
     // покрасить в цвет у графа остаточного (default/red)
     // удалить граф остаточный
     // удалить граф обычный
-
-    const drawerCreateCommand* get_node_create_command(const node* node) const
-    {
-        if (engine == nullptr)
-            throw 1;
-
-        // create 2d objects from 2d_space and supply command with these shapes
-        return nullptr; // new drawerCreateCommand(engine, nullptr);
-    }
 };

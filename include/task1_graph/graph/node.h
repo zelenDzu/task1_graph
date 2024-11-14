@@ -1,6 +1,6 @@
 #pragma once
 #include <vector>
-#include <edge.h>
+#include <graph/edge.h>
 
 class node
 {

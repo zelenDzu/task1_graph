@@ -1,16 +1,10 @@
 #pragma once
 #include <iostream>
+#include <vector>
 
 inline std::vector<std::string> alphabet;
 
-inline void create_alphabet()
-{
-    alphabet.clear();
-    for (char letter = 'A'; letter <= 'Z'; ++letter)
-    {
-        alphabet.emplace_back(1, letter);
-    }
-}
+inline void create_alphabet();
 
 struct s_node
 {
@@ -39,106 +33,40 @@ struct s_node
     {
     }
 
-    ~s_node()
-    {
-        next = nullptr;
-    }
+    ~s_node() { next = nullptr; }
 };
 
 struct stack
 {
-    s_node* top;
+    s_node* top = nullptr;
 
-    stack()
-    {
-        top = nullptr;
-    }
+    stack() = default;
 
-    bool is_empty() const
-    {
-        return top == nullptr;
-    }
+    bool is_empty() const;
 
-    int pop()
-    {
-        if (is_empty()) return INT_MIN;
+    int pop();
 
-        const s_node* top_node = top;
-        int val = top_node->val;
-        top = top->next;
-        delete top_node;
-        return val;
-    }
+    ~stack();
 
-    ~stack()
-    {
-        while (!is_empty())
-        {
-            pop();
-        }
-    }
+    void push(int element);
 
-    void push(const int element)
-    {
-        s_node* new_node = new s_node(element, top);
-        top = new_node;
-    }
+    s_node* stack_top();
 
-    s_node* stack_top()
-    {
-        return top;
-    }
-
-    void show() const
-    {
-        std::cout << "Stack" << std::endl;
-        const s_node* v = top;
-        while (v)
-        {
-            std::cout << v->val << std::endl;
-            v = v->next;
-        }
-    }
+    void show() const;
 };
 
 struct queue
 {
-    s_node* front;
-    s_node* rear;
+    s_node* front = nullptr;
+    s_node* rear = nullptr;
 
-    queue()
-    {
-        front = nullptr;
-        rear = nullptr;
-    }
+    queue() = default;
 
-    ~queue()
-    {
-        while (!is_empty())
-        {
-            dequeue();
-        }
-    }
+    ~queue();
 
-    void enqueue(const int value)
-    {
-        s_node* new_node = new s_node(value);
+    void enqueue(int value);
 
-        if (rear == nullptr)
-        {
-            front = rear = new_node;
-            return;
-        }
-
-        rear->next = new_node;
-        rear = new_node;
-    }
-
-    void enqueue(const int value, s_node* parent)
-    {
-        enqueue(value);
-        rear->parent = parent;
-    }
+    void enqueue(int value, s_node* parent);
 
     /*int dequeue()
     {
@@ -158,32 +86,9 @@ struct queue
         return value;
     }*/
 
-    s_node* dequeue()
-    {
-        if (front == nullptr)
-        {
-            return nullptr;
-        }
+    s_node* dequeue();
 
-        s_node* front_node = front;
-        front = front->next;
+    s_node* peek();
 
-        if (front == nullptr)
-        {
-            rear = nullptr;
-        }
-
-        return front_node;
-    }
-
-
-    s_node* peek()
-    {
-        return front;
-    }
-
-    bool is_empty() const
-    {
-        return front == nullptr;
-    }
+    bool is_empty() const;
 };

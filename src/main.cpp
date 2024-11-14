@@ -1,13 +1,10 @@
 ﻿#include <iostream>
-using namespace std;
+#include "drawer/drawer_commands/drawer_command_factory.h"
+#include "drawer/graph_drawer_engine.h"
 
-//#include "graph_drawer_engine.h"
-//#include "drawer_command_factory.h"
-#include "graph.h"
-
-int main()
+int main(int argc, char **argv)
 {
-    int count = 7;
+    constexpr int count = 7;
     graph* g = new graph(count);
     g->add_edge_flow(0, 1, 0, 3);
     g->add_edge_flow(0, 3, 0, 3);
@@ -24,7 +21,7 @@ int main()
     g->set_end(count - 1);
 
     g->maximize_flow();
-
+    return 0;
 }
 
 /*

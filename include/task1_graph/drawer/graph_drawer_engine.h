@@ -2,7 +2,7 @@
 #include <vector>
 #include <cstdarg>
 
-#include "drawer_command.h"
+#include "drawer_commands/drawer_command.h"
 #include "graph_drawer.h"
 
 /**
@@ -20,12 +20,9 @@ class graphDrawerEngine
 
     graphDrawerEngine() = default;
 
-    void push_command(const drawerCommand* command)
-    {
-        drawing_cache.push_back(command);
-    }
+    void push_command(const drawerCommand* command);
 
-    void clear_cache() { drawing_cache.clear(); }
+    void clear_cache();
 
 public:
     static graphDrawerEngine& get_instance()
@@ -34,46 +31,13 @@ public:
         return INSTANCE;
     }
 
-    void set_graph_drawer(graphDrawer& drawer)
-    {
-        this->drawer = &drawer;
-    }
+    void set_graph_drawer(graphDrawer& drawer);
 
-    unsigned long add_shape(shape2D* shape)
-    {
-        shape_context[++last_index] = shape;
-        return last_index;
-    }
+    unsigned int add_shape(shape2D* shape);
 
-    graphDrawerEngine* with_commands(const unsigned int n_args,
+    graphDrawerEngine* with_commands(unsigned int n_args,
                                      const drawerCommand* commands,
-                                     ...)
-    {
-        va_list args;
-        va_start(args, commands);
-        for (unsigned int i = 0; i < n_args; i++)
-        {
-            // добавляем команду в кэш нашего движка рисовальщика
-            const drawerCommand* command = va_arg(args, const drawerCommand*);
-            push_command(command);
-        }
-        va_end(args);
-        return this;
-    }
+                                     ...);
 
-    void step()
-    {
-        if (drawer->shutdownFlag)
-        {
-            // TODO: Завершение работы
-            return;
-        }
-
-        for (const auto& command : drawing_cache)
-        {
-            command->execute();
-        }
-        clear_cache();
-        drawer->render();
-    }
+    void step();
 };
