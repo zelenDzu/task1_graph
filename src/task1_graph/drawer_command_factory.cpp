@@ -17,7 +17,7 @@ drawerCommandFactory::get_basic_graph_create_command(
     nodes.push_back(new nodeShape(
         std::move(first_node_label),
         point2D(X_CENTER - WIDTH(size) - OFFSET, Y_CENTER),
-        0,
+        DEFAULT,
         5));
 
     // Other nodes
@@ -31,7 +31,7 @@ drawerCommandFactory::get_basic_graph_create_command(
                     static_cast<float>(i) * THETA(size)),
                 Y_CENTER + HEIGHT(size) * std::sin(
                     static_cast<float>(i) * THETA(size))),
-            0,
+            DEFAULT,
             5));
     }
 
@@ -40,7 +40,7 @@ drawerCommandFactory::get_basic_graph_create_command(
     nodes.push_back(new nodeShape(
         std::move(last_node_label),
         point2D(X_CENTER + WIDTH(size) + OFFSET, Y_CENTER),
-        0,
+        DEFAULT,
         5));
 
     // тут будет return некой команды drawer_graph_create_command,
