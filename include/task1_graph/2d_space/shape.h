@@ -3,6 +3,7 @@
 
 #include "point.h"
 #include <string>
+#include <vector>
 
 /**
  * Get the X-axes applied offset
@@ -44,6 +45,7 @@ enum shapeColor
 struct shape2D
 {
     unsigned int shape_id;
+    unsigned int label_id;
 
     std::string label;
     point2D initial_point;
@@ -77,6 +79,15 @@ struct shape2D
     {
         return initial_point;
     }
+
+    /**
+     * Получить все ассоциированные ID графических элементов
+     * @return Список ассоциированных ID графических элементов
+     */
+    virtual std::vector<unsigned int> get_id_list() const
+    {
+        return {label_id};
+    }
 };
 
 /**
@@ -85,6 +96,9 @@ struct shape2D
 struct edgeShape : public shape2D
 {
     static constexpr float LABEL_OFFSET{4.0f};
+
+    unsigned int arrow_id;
+
     float width;
     point2D end_point;
 
@@ -107,7 +121,7 @@ struct edgeShape : public shape2D
      */
     point2D get_label_point() const override
     {
-        point2D middle_point = end_point.get_middle_point(initial_point);
+        const point2D middle_point = end_point.get_middle_point(initial_point);
         const bool left_orientation = end_point.x > initial_point.x;
         const float angle = std::atan(
             (end_point.y - initial_point.y) / (end_point.x - initial_point.x));
@@ -123,6 +137,15 @@ struct edgeShape : public shape2D
                          initial_point.y,
                          sin_angle_offset)
         };
+    }
+
+    /**
+     * Получить все ассоциированные ID графических элементов
+     * @return Список ассоциированных ID графических элементов
+     */
+    std::vector<unsigned int> get_id_list() const override
+    {
+        return {label_id, arrow_id};
     }
 };
 
@@ -253,6 +276,18 @@ struct doubleEdgeShape : public edgeShape
     {
         return this->end_point.get_middle_point(this->initial_point);
     }
+
+    /**
+     * Получить все ассоциированные ID графических элементов
+     * @return Список ассоциированных ID графических элементов
+     */
+    std::vector<unsigned int> get_id_list() const override
+    {
+        return {
+            label_id, forward.label_id, forward.arrow_id, backward.label_id,
+            backward.arrow_id
+        };
+    }
 };
 
 /**
@@ -260,6 +295,8 @@ struct doubleEdgeShape : public edgeShape
  */
 struct nodeShape final : public shape2D
 {
+    unsigned int circle_id;
+
     float radius;
 
     nodeShape() = delete;
@@ -271,5 +308,14 @@ struct nodeShape final : public shape2D
         : shape2D(std::move(label), initial_point, color)
         , radius{radius}
     {
+    }
+
+    /**
+     * Получить все ассоциированные ID графических элементов
+     * @return Список ассоциированных ID графических элементов
+     */
+    std::vector<unsigned int> get_id_list() const override
+    {
+        return {label_id, circle_id};
     }
 };

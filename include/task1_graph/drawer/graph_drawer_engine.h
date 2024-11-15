@@ -10,9 +10,9 @@
  */
 class graphDrawerEngine
 {
-    std::vector<const drawerCommand*> drawing_cache;
+    std::vector<const drawerCommand*> drawing_cache{};
 
-    std::map<unsigned int, shape2D*> shape_context;
+    std::map<unsigned int, shape2D*> shape_context{};
 
     graphDrawer* drawer = nullptr;
 
@@ -36,6 +36,10 @@ public:
     graphDrawer& get_graph_drawer() const;
 
     unsigned int add_shape(shape2D* shape);
+
+    unsigned int get_shape_label_id(unsigned int index);
+
+    shape2D* get_shape(unsigned int index);
 
     void remove_shape(unsigned int index);
 
