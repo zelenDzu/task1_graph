@@ -33,7 +33,11 @@ public:
 
     void set_graph_drawer(graphDrawer& drawer);
 
+    graphDrawer& get_graph_drawer() const;
+
     unsigned int add_shape(shape2D* shape);
+
+    void remove_shape(unsigned int index);
 
     graphDrawerEngine* with_commands(unsigned int n_args,
                                      const drawerCommand* commands,

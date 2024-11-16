@@ -48,6 +48,7 @@ struct shape2D
 */
 struct edgeShape final : public shape2D
 {
+    float width;
     point2D end_point;
 
     edgeShape() = delete;
@@ -55,9 +56,11 @@ struct edgeShape final : public shape2D
     edgeShape(std::string* label,
               const point2D initial_point,
               const point2D end_point,
-              const int color)
+              const int color,
+              const float width)
         : shape2D(label, initial_point, color)
         , end_point{end_point}
+        , width{width}
     {
     }
 

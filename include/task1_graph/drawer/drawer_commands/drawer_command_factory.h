@@ -39,15 +39,51 @@ public:
         this->engine = engine;
     }
 
-    const drawerCreateCommand* get_graph_create_command(
+    /**
+     * Изготовление команды на отрисовку обычного графа
+     * @param graph Логический граф на отрисовку
+     * @return Команда на отрисовку графа
+     */
+    const drawerCreateGraphCommand* get_basic_graph_create_command(
         const graph* graph) const;
 
-    // отрисовка графа обычного
-    // орисовка графа остаточного
-    // обновить ребра у графа обычного (лэйблы)
-    // покрасить в цвет у графа обычного (default/red)
-    // обновить остаточный граф (все ребра и их лэйблы)
-    // покрасить в цвет у графа остаточного (default/red)
-    // удалить граф остаточный
-    // удалить граф обычный
+    /**
+     * Изготовление команды на отрисовку остаточного графа
+     * @param graph Логический граф на отрисовку
+     * @return Команда на отрисовку графа
+     */
+    const drawerCreateGraphCommand* get_remained_graph_create_command(
+        const graph* graph) const;
+
+    /**
+     * Изготовление команды на обновления лейбла ребра
+     * @param edge Ребро для обновления
+     * @return Команда на обновление лейбла
+     */
+    const drawerUpdateLabelCommand* get_update_edge_flow_label_command(
+        const edge& edge) const;
+
+    /**
+     * Изготовление команды на перекрашивание edge в красный цвет
+     * @param edge Ребро для обновления
+     * @return Команда на перекраску
+     */
+    const drawerRecolorCommand* get_recolor_edge_to_red_command(
+        const edge& edge) const;
+
+    /**
+     * Изготовление команды на перекрашивание edge в дефолтный цвет
+     * @param edge Ребро для обновления
+     * @return Команда на перекраску
+     */
+    const drawerRecolorCommand* get_recolor_edge_to_default_command(
+        const edge& edge) const;
+
+    /**
+     * Изготовление команды на удаление графа
+     * @param graph Граф для удаления
+     * @return Команда на удаление
+     */
+    const drawerDeleteCommand* get_graph_delete_command(
+        const graph* graph) const;
 };
