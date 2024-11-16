@@ -31,6 +31,16 @@ unsigned int graphDrawerEngine::add_shape(shape2D* shape)
     return last_index;
 }
 
+unsigned int graphDrawerEngine::get_shape_label_id(const unsigned int index)
+{
+    return shape_context[index]->label_id;
+}
+
+shape2D* graphDrawerEngine::get_shape(const unsigned int index)
+{
+    return shape_context[index];
+}
+
 void graphDrawerEngine::remove_shape(const unsigned int index)
 {
     shape_context.erase(index);
