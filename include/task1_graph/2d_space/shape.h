@@ -32,6 +32,12 @@ inline float get_offset_y(const bool left_orientation,
     return left_orientation ? base - offset : base + offset;
 }
 
+enum shapeColor
+{
+    DEFAULT,
+    MARKED,
+};
+
 /**
  * Фигура в 2-д пространстве
  */
@@ -41,7 +47,7 @@ struct shape2D
 
     std::string label;
     point2D initial_point;
-    int color;
+    shapeColor color;
 
     shape2D() = delete;
 
@@ -54,7 +60,7 @@ struct shape2D
 
     shape2D(std::string&& label,
             const point2D initial_point,
-            const int color)
+            const shapeColor color)
         : label{label}
         , initial_point{initial_point}
         , color{color}
@@ -87,7 +93,7 @@ struct edgeShape : public shape2D
     edgeShape(std::string&& label,
               const point2D initial_point,
               const point2D end_point,
-              const int color,
+              const shapeColor color,
               const float width)
         : shape2D(std::move(label), initial_point, color)
         , width{width}
@@ -131,7 +137,7 @@ struct doubleEdgeShape : public edgeShape
     doubleEdgeShape(std::string&& label,
                     const point2D initial_point,
                     const point2D end_point,
-                    const int color,
+                    const shapeColor color,
                     const float width,
                     std::string&& forward_label,
                     std::string&& backward_label)
@@ -165,7 +171,7 @@ struct doubleEdgeShape : public edgeShape
     static edgeShape create_forward_edge(std::string&& label,
                                          const point2D initial_point,
                                          const point2D end_point,
-                                         const int color,
+                                         const shapeColor color,
                                          const float width)
     {
         // The arrow is "from left to right"
@@ -208,7 +214,7 @@ struct doubleEdgeShape : public edgeShape
     static edgeShape create_backward_edge(std::string&& label,
                                           const point2D initial_point,
                                           const point2D end_point,
-                                          const int color,
+                                          const shapeColor color,
                                           const float width)
     {
         // The arrow is "from left to right"
@@ -260,7 +266,7 @@ struct nodeShape final : public shape2D
 
     nodeShape(std::string&& label,
               const point2D initial_point,
-              const int color,
+              const shapeColor color,
               const float radius)
         : shape2D(std::move(label), initial_point, color)
         , radius{radius}

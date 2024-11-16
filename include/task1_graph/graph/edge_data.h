@@ -28,9 +28,9 @@ public:
 
     std::string to_label() const override
     {
-        const std::string result = std::to_string(capacity) + "/" +
+        std::string result = std::to_string(capacity) + "/" +
             std::to_string(flow);
-        return std::string(result);
+        return {std::move(result)};
     }
 };
 
