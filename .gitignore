@@ -5,3 +5,9 @@ cmake-build-debug/*
 .idea
 .vs/*
 out/*
+*.cmake
+CMakeCache.txt
+CMakeSettings.json
+*.sln
+CMakeFiles/*
+_deps/*
