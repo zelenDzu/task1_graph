@@ -95,7 +95,7 @@ struct shape2D
 */
 struct edgeShape : public shape2D
 {
-    static constexpr float LABEL_OFFSET{4.0f};
+    static constexpr float LABEL_OFFSET{15.0f};
 
     unsigned int arrow_id;
 
@@ -123,7 +123,7 @@ struct edgeShape : public shape2D
     {
         const point2D middle_point = end_point.get_middle_point(initial_point);
         const bool left_orientation = end_point.x > initial_point.x;
-        const float angle = std::atan(
+        const float angle = 3.1415f/2 - std::atan(
             (end_point.y - initial_point.y) / (end_point.x - initial_point.x));
         const float cos = std::cos(angle);
         const float sin = std::sin(angle);
@@ -134,7 +134,7 @@ struct edgeShape : public shape2D
                          middle_point.x,
                          cos_angle_offset),
             get_offset_x(left_orientation,
-                         initial_point.y,
+                         middle_point.y,
                          sin_angle_offset)
         };
     }
@@ -151,7 +151,7 @@ struct edgeShape : public shape2D
 
 struct doubleEdgeShape : public edgeShape
 {
-    static constexpr float SHIFT_BETWEEN_EDGES{6.0f};
+    static constexpr float SHIFT_BETWEEN_EDGES{15.0f};
     edgeShape forward;
     edgeShape backward;
 
@@ -199,7 +199,7 @@ struct doubleEdgeShape : public edgeShape
     {
         // The arrow is "from left to right"
         const bool left_orientation = end_point.x > initial_point.x;
-        const float angle = std::atan(
+        const float angle = 3.1415f/2 - std::atan(
             (end_point.y - initial_point.y) / (end_point.x - initial_point.x));
         const float cos = std::cos(angle);
         const float sin = std::sin(angle);
@@ -242,7 +242,7 @@ struct doubleEdgeShape : public edgeShape
     {
         // The arrow is "from left to right"
         const bool left_orientation = end_point.x > initial_point.x;
-        const float angle = std::atan(
+        const float angle = 3.1415f/2 - std::atan(
             (end_point.y - initial_point.y) / (end_point.x - initial_point.x));
         const float cos = std::cos(angle);
         const float sin = std::sin(angle);
@@ -274,7 +274,7 @@ struct doubleEdgeShape : public edgeShape
      */
     point2D get_label_point() const override
     {
-        return this->end_point.get_middle_point(this->initial_point);
+        return end_point.get_middle_point(initial_point);
     }
 
     /**

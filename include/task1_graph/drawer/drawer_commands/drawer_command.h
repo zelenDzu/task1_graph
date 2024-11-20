@@ -23,13 +23,13 @@ struct drawerCommand
     virtual void execute() const = 0;
 };
 
-struct drawerCreateCommand : public drawerCommand
+struct drawerCreateNodeCommand : public drawerCommand
 {
-    shape2D& shape_to_create;
+    nodeShape& shape_to_create;
 
-    drawerCreateCommand() = delete;
+    drawerCreateNodeCommand() = delete;
 
-    drawerCreateCommand(graphDrawerEngine* engine, shape2D& shape_to_create)
+    drawerCreateNodeCommand(graphDrawerEngine* engine, nodeShape& shape_to_create)
         : drawerCommand(engine)
         , shape_to_create{shape_to_create}
     {
@@ -114,3 +114,4 @@ struct drawerUpdateLabelCommand : public drawerCommand
 
     void execute() const override;
 };
+

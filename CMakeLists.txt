@@ -40,3 +40,6 @@ add_executable(task1_graph
 target_link_libraries(task1_graph PRIVATE sfml-graphics)
 
 target_compile_features(task1_graph PRIVATE cxx_std_17)
+
+file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/arial.ttf
+        DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY})

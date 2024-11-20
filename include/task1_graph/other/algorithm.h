@@ -2,9 +2,7 @@
 #include <iostream>
 #include <vector>
 
-inline std::vector<std::string> alphabet;
-
-inline void create_alphabet();
+inline static std::string alphabet{"ABCDEFGHIJKLMNOPQRSTUVWXYZ"};
 
 struct s_node
 {

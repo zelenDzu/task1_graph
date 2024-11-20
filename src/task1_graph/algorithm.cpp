@@ -1,14 +1,5 @@
 #include "other/algorithm.h"
 
-inline void create_alphabet()
-{
-    alphabet.clear();
-    for (char letter = 'A'; letter <= 'Z'; ++letter)
-    {
-        alphabet.emplace_back(1, letter);
-    }
-}
-
 bool stack::is_empty() const
 {
     return top == nullptr;

@@ -9,6 +9,10 @@ void graphDrawerEngine::push_command(const drawerCommand* command)
 
 void graphDrawerEngine::clear_cache()
 {
+    for (const drawerCommand* command : drawing_cache)
+    {
+        delete command;
+    }
     drawing_cache.clear();
 }
 
@@ -46,20 +50,13 @@ void graphDrawerEngine::remove_shape(const unsigned int index)
     shape_context.erase(index);
 }
 
-graphDrawerEngine* graphDrawerEngine::with_commands(const unsigned int n_args,
-                                                    const drawerCommand*
-                                                    commands,
-                                                    ...)
+graphDrawerEngine* graphDrawerEngine::with_commands(std::vector<const drawerCommand*>&& commands)
 {
-    va_list args;
-    va_start(args, commands);
-    for (unsigned int i = 0; i < n_args; i++)
+    for (const drawerCommand* command : commands)
     {
         // добавляем команду в кэш нашего движка рисовальщика
-        const drawerCommand* command = va_arg(args, const drawerCommand*);
         push_command(command);
     }
-    va_end(args);
     return this;
 }
 
@@ -67,11 +64,13 @@ void graphDrawerEngine::step()
 {
     if (drawer->shutdownFlag)
     {
-        // TODO: Завершение работы
+        clear_cache();
+        last_index = 0u;
+        drawer = nullptr;
         return;
     }
 
-    for (const auto& command : drawing_cache)
+    for (const drawerCommand* command : drawing_cache)
     {
         command->execute();
     }

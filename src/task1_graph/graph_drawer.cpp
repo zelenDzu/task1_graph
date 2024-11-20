@@ -2,7 +2,8 @@
 
 #include "drawer/graph_drawer.h"
 
-inline static const std::string DEFAULT_FONT{"arial.ttf"};
+inline static const std::string DEFAULT_FONT{"arial.ttf"
+};
 
 /**
  * Get the X-axes applied offset
@@ -44,7 +45,12 @@ void graphDrawer::create_window()
     if (window != nullptr)
         window = nullptr;
 
-    window = new sf::RenderWindow({1280u, 1024u}, "Main Window");
+    sf::ContextSettings settings;
+    settings.antialiasingLevel = 8;
+    window = new sf::RenderWindow({1280u, 1024u},
+                                  "Main Window",
+                                  sf::Style::Default,
+                                  settings);
     window->setFramerateLimit(120u);
 }
 
@@ -90,10 +96,10 @@ void graphDrawer::clear() const
 
 #pragma region drawing_api
 
-inline static constexpr unsigned int N_ARROW_SHAPE_POINTS{7};
-inline static constexpr float ARROW_HEAD_SHIFT{6.0f};
-inline static constexpr float ARROW_HEAD_WIDTH_SCALE{4.0f};
-inline static constexpr unsigned int FONT_SIZE{14};
+inline static constexpr unsigned int N_ARROW_SHAPE_POINTS{9};
+inline static constexpr float ARROW_HEAD_SHIFT{40.0f};
+inline static constexpr float ARROW_HEAD_WIDTH_SCALE{5.0f};
+inline static constexpr unsigned int FONT_SIZE{28};
 
 unsigned int graphDrawer::draw_circle(const float radius,
                                       const float x,
@@ -101,7 +107,9 @@ unsigned int graphDrawer::draw_circle(const float radius,
                                       const sf::Color& color)
 {
     const auto circle = new sf::CircleShape(radius);
-    circle->setPosition(x, y);
+    circle->setOrigin(radius, radius);
+
+    circle->setPosition(x, 1280.f - y);
     circle->setFillColor(color);
     return frame.push(circle);
 }
@@ -114,7 +122,7 @@ unsigned int graphDrawer::draw_line(const float length,
                                     const sf::Color& color)
 {
     const auto line = new sf::RectangleShape({length, width});
-    line->setPosition({x, y});
+    line->setPosition({x, 1280.f - y});
     line->setRotation(rotation);
     line->setFillColor(color);
     return frame.push(line);
@@ -127,37 +135,38 @@ unsigned int graphDrawer::draw_arrow(const float xStart,
                                      const float width,
                                      const sf::Color& color)
 {
-    const auto arrow = new sf::ConvexShape();
-    arrow->setPointCount(N_ARROW_SHAPE_POINTS);
+    auto* arrow = new sf::VertexArray(sf::Triangles, N_ARROW_SHAPE_POINTS);
+    //const auto arrow = new sf::ConvexShape();
+    //arrow->setPointCount(N_ARROW_SHAPE_POINTS);
     // The arrow is "from left to right"
     const bool left_orientation = xEnd > xStart;
-    const float angle = std::atan((yEnd - yStart) / (xEnd - xStart));
+    const float angle = 3.1415f / 2 - std::atan(
+        (yEnd - yStart) / (xEnd - xStart));
     const float cos = std::cos(angle);
     const float sin = std::sin(angle);
     const float cos_angle_offset = width / 2 * cos;
     const float sin_angle_offset = width / 2 * sin;
 
     // Point I
-    arrow->setPoint(0,
-                    {
-                        get_offset_x(left_orientation,
-                                     xStart,
-                                     cos_angle_offset),
-                        get_offset_y(left_orientation,
-                                     yStart,
-                                     sin_angle_offset)
-                    });
-
+    (*arrow)[0].position =
+    {
+        get_offset_x(left_orientation,
+                     xStart,
+                     cos_angle_offset),
+        1280.f - get_offset_y(left_orientation,
+                              yStart,
+                              sin_angle_offset)
+    };
     // Point II
-    arrow->setPoint(1,
-                    {
-                        get_offset_y(left_orientation,
-                                     xStart,
-                                     cos_angle_offset),
-                        get_offset_x(left_orientation,
-                                     yStart,
-                                     sin_angle_offset)
-                    });
+    (*arrow)[1].position =
+    {
+        get_offset_y(left_orientation,
+                     xStart,
+                     cos_angle_offset),
+        1280.f - get_offset_x(left_orientation,
+                              yStart,
+                              sin_angle_offset)
+    };
 
     const float cos_shift_offset = ARROW_HEAD_SHIFT * cos;
     const float sin_shift_offset = ARROW_HEAD_SHIFT * sin;
@@ -170,53 +179,57 @@ unsigned int graphDrawer::draw_arrow(const float xStart,
     // Point(shifted_xEnd, shifted_yEnd) placed where the arrow's head started
 
     // Point III
-    arrow->setPoint(2,
-                    {
-                        get_offset_y(left_orientation,
-                                     shifted_xEnd,
-                                     cos_angle_offset),
-                        get_offset_x(left_orientation,
-                                     shifted_yEnd,
-                                     sin_angle_offset)
-                    });
+    (*arrow)[2].position =
+    {
+        get_offset_y(left_orientation,
+                     shifted_xEnd,
+                     cos_angle_offset),
+        1280.f - get_offset_x(left_orientation,
+                              shifted_yEnd,
+                              sin_angle_offset)
+    };
+
+    (*arrow)[3].position = (*arrow)[0].position;
+    (*arrow)[4].position = (*arrow)[2].position;
 
     // Point IV
-    arrow->setPoint(3,
-                    {
-                        get_offset_y(left_orientation,
-                                     shifted_xEnd,
-                                     cos_angle_offset * ARROW_HEAD_WIDTH_SCALE),
-                        get_offset_x(left_orientation,
-                                     shifted_yEnd,
-                                     sin_angle_offset * ARROW_HEAD_WIDTH_SCALE)
-                    });
+    (*arrow)[6].position =
+    {
+        get_offset_y(left_orientation,
+                     shifted_xEnd,
+                     cos_angle_offset * ARROW_HEAD_WIDTH_SCALE),
+        1280.f - get_offset_x(left_orientation,
+                              shifted_yEnd,
+                              sin_angle_offset * ARROW_HEAD_WIDTH_SCALE)
+    };
 
     // Point V
-    arrow->setPoint(4, {xEnd, yEnd});
+    (*arrow)[7].position = {xEnd, 1280.f - yEnd};
 
     // Point VI
-    arrow->setPoint(5,
-                    {
-                        get_offset_x(left_orientation,
-                                     shifted_xEnd,
-                                     cos_angle_offset * ARROW_HEAD_WIDTH_SCALE),
-                        get_offset_y(left_orientation,
-                                     shifted_yEnd,
-                                     sin_angle_offset * ARROW_HEAD_WIDTH_SCALE)
-                    });
+    (*arrow)[8].position =
+    {
+        get_offset_x(left_orientation,
+                     shifted_xEnd,
+                     cos_angle_offset * ARROW_HEAD_WIDTH_SCALE),
+        1280.f - get_offset_y(left_orientation,
+                              shifted_yEnd,
+                              sin_angle_offset * ARROW_HEAD_WIDTH_SCALE)
+    };
 
     // Point VII
-    arrow->setPoint(6,
-                    {
-                        get_offset_x(left_orientation,
-                                     shifted_xEnd,
-                                     cos_angle_offset),
-                        get_offset_y(left_orientation,
-                                     shifted_yEnd,
-                                     sin_angle_offset)
-                    });
+    (*arrow)[5].position =
+    {
+        get_offset_x(left_orientation,
+                     shifted_xEnd,
+                     cos_angle_offset),
+        1280.f - get_offset_y(left_orientation,
+                              shifted_yEnd,
+                              sin_angle_offset)
+    };
 
-    arrow->setFillColor(color);
+    for (unsigned int i = 0u; i < N_ARROW_SHAPE_POINTS; i++)
+        (*arrow)[i].color = color;
     return frame.push(arrow);
 }
 
@@ -226,7 +239,9 @@ unsigned int graphDrawer::draw_label(const std::string& label,
                                      const sf::Color& color)
 {
     const auto text = new sf::Text(label, font, FONT_SIZE);
-    text->setPosition(x, y);
+    text->setPosition(x, 1280.f - y);
+    const sf::FloatRect rc = text->getLocalBounds();
+    text->setOrigin(rc.width / 2, rc.height);
     text->setFillColor(color);
     return frame.push(text);
 }
@@ -251,9 +266,6 @@ void graphDrawer::recolor_shape(const unsigned int id, const sf::Color& color)
 void graphDrawer::rename_label(const unsigned int id, const std::string& name)
 {
     const auto text = frame.get_text(id);
-    const auto previous_name = text->getString();
-    delete previous_name.getData();
-    // TODO: Check if this memory management is correct for SFML sf::String
     text->setString(name);
 }
 

@@ -25,6 +25,6 @@ struct point2D final
      */
     point2D get_middle_point(const point2D other) const
     {
-        return {other.x - x, other.y - y};
+        return {(other.x + x) / 2, (other.y + y) / 2};
     }
 };

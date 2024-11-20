@@ -1,9 +1,19 @@
 #include "drawer/drawer_commands/drawer_command.h"
 #include "drawer/graph_drawer_engine.h"
 
-void drawerCreateCommand::execute() const
+void drawerCreateNodeCommand::execute() const
 {
-    engine->add_shape(&shape_to_create);
+    auto& drawer = engine->get_graph_drawer();
+    shape_to_create.circle_id =
+            drawer.draw_circle(shape_to_create.radius,
+                               shape_to_create.initial_point.x,
+                               shape_to_create.initial_point.y);
+    const point2D label_point = shape_to_create.get_label_point();
+    shape_to_create.label_id =
+        drawer.draw_label(shape_to_create.label,
+                          label_point.x,
+                          label_point.y);
+    shape_to_create.shape_id = engine->add_shape(&shape_to_create);
 }
 
 void drawerDeleteCommand::execute() const
