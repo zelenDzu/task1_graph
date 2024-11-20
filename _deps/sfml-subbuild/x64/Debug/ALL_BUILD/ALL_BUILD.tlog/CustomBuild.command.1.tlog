@@ -1,0 +1,10 @@
+^C:\USERS\EKULI\SOURCE\REPOS\TASK1_GRAPH\TASK1_GRAPH\_DEPS\SFML-SUBBUILD\CMAKELISTS.TXT
+setlocal
+"C:\Program Files\CMake\bin\cmake.exe" -SC:/Users/ekuli/source/repos/task1_graph/task1_graph/_deps/sfml-subbuild -BC:/Users/ekuli/source/repos/task1_graph/task1_graph/_deps/sfml-subbuild --check-stamp-file C:/Users/ekuli/source/repos/task1_graph/task1_graph/_deps/sfml-subbuild/CMakeFiles/generate.stamp
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal & call :cmErrorLevel %errorlevel% & goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd

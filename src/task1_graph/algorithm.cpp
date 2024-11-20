@@ -88,7 +88,6 @@ s_node* queue::dequeue()
     return front_node;
 }
 
-
 s_node* queue::peek()
 {
     return front;

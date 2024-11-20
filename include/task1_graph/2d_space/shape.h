@@ -44,15 +44,15 @@ enum shapeColor
  */
 struct shape2D
 {
-    unsigned int shape_id;
-    unsigned int label_id;
+    unsigned int shape_id; //local
+    unsigned int label_id; //sfml
 
     std::string label;
     point2D initial_point;
     shapeColor color;
 
     shape2D() = delete;
-
+    
     shape2D(std::string&& label,
             const point2D initial_point)
         : label{label}
@@ -97,7 +97,7 @@ struct edgeShape : public shape2D
 {
     static constexpr float LABEL_OFFSET{15.0f};
 
-    unsigned int arrow_id;
+    unsigned int arrow_id; //sfml
 
     float width;
     point2D end_point;
@@ -127,7 +127,7 @@ struct edgeShape : public shape2D
             (end_point.y - initial_point.y) / (end_point.x - initial_point.x));
         const float cos = std::cos(angle);
         const float sin = std::sin(angle);
-        const float cos_angle_offset = LABEL_OFFSET * cos;
+        const float cos_angle_offset = LABEL_OFFSET * cos; // r * cos - polar
         const float sin_angle_offset = LABEL_OFFSET * sin;
         return {
             get_offset_y(left_orientation,
@@ -295,7 +295,7 @@ struct doubleEdgeShape : public edgeShape
  */
 struct nodeShape final : public shape2D
 {
-    unsigned int circle_id;
+    unsigned int circle_id; //sfml
 
     float radius;
 

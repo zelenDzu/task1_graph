@@ -1,6 +1,7 @@
 ﻿#include <iostream>
 #include "drawer/drawer_commands/drawer_command_factory.h"
 #include "drawer/graph_drawer_engine.h"
+#include "other/algorithm.h"
 
 int main(int argc, char** argv)
 {
@@ -35,5 +36,6 @@ int main(int argc, char** argv)
     renderer.recolor_shape(13, sf::Color::Red);
     renderer.render();
     g->maximize_flow();
+    g->show();
     return 0;
 }

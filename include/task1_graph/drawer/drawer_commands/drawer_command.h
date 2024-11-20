@@ -2,7 +2,7 @@
 #include "2d_space/shape.h"
 #include <vector>
 
-class graphDrawerEngine;
+class graphDrawerEngine; // forward declaration
 
 /**
  * Команда, которая выполняется на движке
@@ -22,8 +22,8 @@ struct drawerCommand
 
     virtual void execute() const = 0;
 };
-
-struct drawerCreateNodeCommand : public drawerCommand
+// destroy
+struct drawerCreateCommand : public drawerCommand
 {
     nodeShape& shape_to_create;
 

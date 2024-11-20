@@ -1,0 +1,3 @@
+C:/Users/ekuli/source/repos/task1_graph/task1_graph/_deps/sfml-subbuild/CMakeFiles/sfml-populate.dir
+C:/Users/ekuli/source/repos/task1_graph/task1_graph/_deps/sfml-subbuild/CMakeFiles/ALL_BUILD.dir
+C:/Users/ekuli/source/repos/task1_graph/task1_graph/_deps/sfml-subbuild/CMakeFiles/ZERO_CHECK.dir

@@ -2,12 +2,17 @@
 
 graph::graph(const unsigned int nodes_count)
 {
-    for (int i = 0u; i < nodes_count; i++)
+    for (unsigned int i = 0u; i < nodes_count; i++)
     {
         nodes.push_back(new node(i));
     }
     start = nodes.front();
     end = nodes.back();
+}
+
+graph::graph(const unsigned int nodes_count, const graph_type type) : graph(nodes_count)
+{
+    this->type = type;
 }
 
 void graph::add_node()
@@ -69,21 +74,20 @@ void graph::clear_edges()
     }
 }
 
-void graph::show(const bool res = false) const
+void graph::show() const
 {
-    static const std::string alf = "ABCDEFGHIJKLMNOPQ";
     std::cout << "\n\nNodes count: " << nodes.size();
     for (const node* v : nodes)
     {
-        std::cout << "\nNode " << alf[v->id];
+        std::cout << "\nNode " << alphabet[v->id];
         for (const edge* e : v->edges)
         {
-            if (res)
+            if (type == RESIDUAL)
             {
                 // TODO: dynamic_cast usage here - ошибка проектирования
                 const int value =
                     dynamic_cast<edgeDataSingle*>(e->data)->value;
-                std::cout << "\n\t" << alf[e->to->id] << ": " << value;
+                std::cout << "\n\t" << alphabet[e->to->id] << ": " << value;
             }
             else
             {
@@ -94,7 +98,7 @@ void graph::show(const bool res = false) const
                 const int capacity = edge_data->capacity;
                 std::cout
                     << "\n\t"
-                    << alf[e->to->id] << ": " << flow << "/" << capacity;
+                    << alphabet[e->to->id] << ": " << flow << "/" << capacity;
             }
         }
     }
@@ -241,7 +245,7 @@ void graph::apply_augmenting_path(const stack* path, const graph* res_net)
 
 void graph::maximize_flow()
 {
-    graph* res_net = new graph(nodes.size());
+    graph* res_net = new graph(nodes.size(), RESIDUAL);
     res_net->start = res_net->nodes[start->id];
     res_net->end = res_net->nodes[end->id];
     stack* path = new stack();
@@ -255,5 +259,4 @@ void graph::maximize_flow()
 
     delete res_net;
     delete path;
-    show();
 }

@@ -128,7 +128,7 @@ drawerCommandFactory::get_update_edge_flow_label_command(
     // TODO: Необходимо знать ID шейпа для заданного edge.
     // Об этом должен знать engine через таблицу маппинга, edge не должен знать
     return new drawerUpdateLabelCommand(engine,
-                                        0u,
+                                        0u,//id
                                         edge.data->to_label());
 }
 

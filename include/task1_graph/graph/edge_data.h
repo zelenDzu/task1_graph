@@ -30,7 +30,7 @@ public:
     {
         std::string result = std::to_string(capacity) + "/" +
             std::to_string(flow);
-        return {std::move(result)};
+        return {result};
     }
 };
 
