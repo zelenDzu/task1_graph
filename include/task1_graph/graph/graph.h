@@ -2,18 +2,25 @@
 #include "node.h"
 #include "other/algorithm.h"
 
+enum graph_type
+{
+    FLOW,
+    RESIDUAL
+};
+
 class graph
 {
 public:
     node* start = nullptr;
     node* end = nullptr;
+    graph_type type = FLOW;
     std::vector<node*> nodes;
 
     graph() = default;
 
-    //graph(node* start, node* end) : start{start}, end{end} {}
-
     graph(unsigned int nodes_count);
+
+    graph(unsigned int nodes_count, graph_type type);
 
     void add_node();
 
@@ -34,7 +41,7 @@ public:
 
     void clear_edges();
 
-    void show(bool res) const;
+    void show() const;
 
     void update_residual_network(graph* res_net);
 

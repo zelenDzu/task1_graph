@@ -12,6 +12,5 @@ public:
 
     node(const unsigned int id)
         : id{id}
-    {
-    }
+    {}
 };

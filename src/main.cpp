@@ -1,6 +1,7 @@
 ﻿#include <iostream>
 #include "drawer/drawer_commands/drawer_command_factory.h"
 #include "drawer/graph_drawer_engine.h"
+#include "other/algorithm.h"
 
 int main(int argc, char **argv)
 {
@@ -21,6 +22,7 @@ int main(int argc, char **argv)
     g->set_end(count - 1);
 
     g->maximize_flow();
+    g->show();
     return 0;
 }
 

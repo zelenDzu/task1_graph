@@ -1,6 +1,7 @@
 #include "drawer/drawer_commands/drawer_command.h"
 #include "drawer/graph_drawer_engine.h"
 
+// destroy
 void drawerCreateCommand::execute() const
 {
     engine->add_shape(&shape_to_create);
@@ -24,7 +25,7 @@ void drawerDeleteCommand::execute() const
 
 void drawerRecolorCommand::execute() const
 {
-    auto& drawer = engine->get_graph_drawer();
+    graphDrawer& drawer = engine->get_graph_drawer();
     drawer.recolor_shape(shape_id,
                          mark ? drawer.RED : drawer.YELLOW);
 }
@@ -32,7 +33,7 @@ void drawerRecolorCommand::execute() const
 void drawerCreateGraphCommand::execute() const
 {
     // TODO: Check color consistency on create
-    auto& drawer = engine->get_graph_drawer();
+    graphDrawer& drawer = engine->get_graph_drawer();
     for (nodeShape* nod : nodes_to_create)
     {
         nod->circle_id =

@@ -2,9 +2,7 @@
 #include <iostream>
 #include <vector>
 
-inline std::vector<std::string> alphabet;
-
-inline void create_alphabet();
+const static std::string alphabet {"ABCDEFGHIJKLMNOPQRSTUVWXYZ"};
 
 struct s_node
 {
@@ -46,13 +44,13 @@ struct stack
 
     int pop();
 
-    ~stack();
-
     void push(int element);
 
     s_node* stack_top();
 
     void show() const;
+    
+    ~stack();
 };
 
 struct queue
@@ -67,24 +65,6 @@ struct queue
     void enqueue(int value);
 
     void enqueue(int value, s_node* parent);
-
-    /*int dequeue()
-    {
-        if (front == nullptr) {
-            return INT_MIN;
-        }
-
-        s_node* temp = front;
-        int value = temp->val;
-        front = front->next;
-
-        if (front == nullptr) {
-            rear = nullptr;
-        }
-
-        delete temp;
-        return value;
-    }*/
 
     s_node* dequeue();
 

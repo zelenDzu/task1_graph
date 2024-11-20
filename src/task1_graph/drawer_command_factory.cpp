@@ -13,7 +13,7 @@ drawerCommandFactory::get_basic_graph_create_command(
     const unsigned int size = graph->nodes.size();
 
     // First node
-    std::string first_node_label = alphabet[0];
+    std::string first_node_label = std::string(1, alphabet[0]);
     nodes.push_back(new nodeShape(
         std::move(first_node_label),
         point2D(X_CENTER - WIDTH(size) - OFFSET, Y_CENTER),
@@ -23,20 +23,20 @@ drawerCommandFactory::get_basic_graph_create_command(
     // Other nodes
     for (int i = 1; i <= COUNT(size); i++)
     {
-        std::string i_node_label = alphabet[i];
+        std::string i_node_label = std::string(1, alphabet[i]);
         nodes.push_back(new nodeShape(
             std::move(i_node_label),
             point2D(
                 X_CENTER + WIDTH(size) * std::cos(
                     static_cast<float>(i) * THETA(size)),
-                Y_CENTER + HEIGHT(size) * std::sin(
+                Y_CENTER + HEIGHT(size) * std::sin( 
                     static_cast<float>(i) * THETA(size))),
             DEFAULT,
             5));
     }
 
     // Last node
-    std::string last_node_label = alphabet[COUNT(size) + 1];
+    std::string last_node_label = std::string(1, alphabet[COUNT(size) + 1]);
     nodes.push_back(new nodeShape(
         std::move(last_node_label),
         point2D(X_CENTER + WIDTH(size) + OFFSET, Y_CENTER),
@@ -60,7 +60,7 @@ drawerCommandFactory::get_update_edge_flow_label_command(
     // TODO: Необходимо знать ID шейпа для заданного edge.
     // Об этом должен знать engine через таблицу маппинга, edge не должен знать
     return new drawerUpdateLabelCommand(engine,
-                                        0u,
+                                        0u,//id
                                         edge.data->to_label());
 }
 
