@@ -23,7 +23,7 @@ struct drawerCommand
     virtual void execute() const = 0;
 };
 // destroy
-struct drawerCreateCommand : public drawerCommand
+struct drawerCreateNodeCommand : public drawerCommand
 {
     nodeShape& shape_to_create;
 

@@ -11,3 +11,4 @@ CMakeSettings.json
 *.sln
 CMakeFiles/*
 _deps/*
+task1_graph.dir
