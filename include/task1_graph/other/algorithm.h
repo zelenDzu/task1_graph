@@ -4,6 +4,8 @@
 
 inline static std::string alphabet{"ABCDEFGHIJKLMNOPQRSTUVWXYZ"};
 
+inline static void console_pause();
+
 struct s_node
 {
     int val;

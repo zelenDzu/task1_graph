@@ -1,6 +1,8 @@
 #pragma once
 #include "node.h"
 #include "other/algorithm.h"
+#include "drawer/graph_drawer_engine.h"
+#include "drawer/drawer_commands/drawer_command_factory.h"
 
 enum graph_type
 {
@@ -15,12 +17,14 @@ public:
     node* end = nullptr;
     graph_type type = FLOW;
     std::vector<node*> nodes;
+    graphDrawerEngine* engine = nullptr;
+    drawerCommandFactory* factory = nullptr;
 
-    graph() = default;
+    graph() = delete;
 
-    graph(unsigned int nodes_count);
+    graph(graphDrawerEngine* engine, drawerCommandFactory* factory,  unsigned int nodes_count);
 
-    graph(unsigned int nodes_count, graph_type type);
+    graph(graphDrawerEngine* engine, drawerCommandFactory* factory, unsigned int nodes_count, graph_type type);
 
     void add_node();
 
@@ -41,7 +45,7 @@ public:
 
     void clear_edges();
 
-    void show() const;
+    void show_data() const;
 
     void update_residual_network(graph* res_net);
 
@@ -55,6 +59,8 @@ public:
     void apply_augmenting_path(const stack* path, const graph* res_net);
 
     void maximize_flow();
+
+    void update_flow_edge(edge* orig_edge);
 
     std::vector<node*> get_all_nodes() const;
 

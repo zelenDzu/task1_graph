@@ -4,19 +4,19 @@
 #include "other/algorithm.h"
 #include <cmath>
 
-#define COUNT(n) (n - 2)
-#define DEG2RAD(n) ((n * PI) / 180)
-#define RAD2DEG(n) ((n * 180) / PI)
-#define X_CENTER 620.0f
-#define Y_CENTER 620.0f
-#define OFFSET 90.0f
-#define BASE_WIDTH 100.0f
-#define BASE_HEIGHT 100.0f
-#define SCALE_WIDTH 20.0f
-#define SCALE_HEIGHT 20.0f
-#define WIDTH(x) (BASE_WIDTH + SCALE_WIDTH * COUNT(x))
-#define HEIGHT(x) (BASE_HEIGHT + SCALE_HEIGHT * COUNT(x))
-#define THETA(x) (2 * PI / COUNT(x))
+#define COUNT(n) (n - 2) // количество точек (без первой и последней)
+#define DEG2RAD(n) ((n * PI) / 180) // градусы в радианы
+#define RAD2DEG(n) ((n * 180) / PI) // радианы в градусы
+#define X_CENTER 620.0f // абсцисса центра графа
+#define Y_CENTER(offset) (1020.0f - offset) // ордината центра графа
+#define OFFSET 150.0f // сдвиг для первой и последней точки
+#define BASE_WIDTH 150.0f // базовая ширина графа
+#define BASE_HEIGHT 100.0f // базовая высота графа
+#define SCALE_WIDTH 30.0f // коэффициент увеличения ширины графа
+#define SCALE_HEIGHT 20.0f // коэффициент увеличения высоты графа
+#define WIDTH(x) (BASE_WIDTH + SCALE_WIDTH * COUNT(x)) // ширина графа
+#define HEIGHT(x) (BASE_HEIGHT + SCALE_HEIGHT * COUNT(x)) // высота графа
+#define THETA(x) (2 * PI / COUNT(x)) // угол расстояния между вершинами
 
 class drawerCommandFactory
 {
@@ -47,14 +47,6 @@ public:
      * @return Команда на отрисовку графа
      */
     const drawerCreateGraphCommand* get_basic_graph_create_command(
-        const graph* graph) const;
-
-    /**
-     * Изготовление команды на отрисовку остаточного графа
-     * @param graph Логический граф на отрисовку
-     * @return Команда на отрисовку графа
-     */
-    const drawerCreateGraphCommand* get_remained_graph_create_command(
         const graph* graph) const;
 
     /**

@@ -28,8 +28,8 @@ public:
 
     std::string to_label() const override
     {
-        std::string result = std::to_string(capacity) + "/" +
-            std::to_string(flow);
+        std::string result = std::to_string(flow) + "/" +
+            std::to_string(capacity);
         return {result};
     }
 };

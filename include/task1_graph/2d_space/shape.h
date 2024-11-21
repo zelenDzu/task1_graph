@@ -43,12 +43,11 @@ struct shape2D
     {
     }
 
-    // noexcept нужен чтоб vector не выдавал ошибок и при перемещении vector чтоб он использовал конструктор перемещения
+    // noexcept нужен чтоб vector не выдавал ошибок и при перемещении vector чтоб использовался конструктор перемещения для шейпов
     virtual ~shape2D() noexcept = default;
 
     /**
      * Определить положение метки названия. По умолчанию initial_point
-     * @return Положене метки названия
      */
     virtual point2D get_label_point() const
     {
@@ -96,13 +95,11 @@ struct edgeShape : public shape2D
     {
         const point2D middle_point = end_point.get_middle_point(initial_point);
         const bool left_orientation = end_point.x > initial_point.x;
-        // Пи/2 потому что у sfml ордината идет вниз
-        const float angle = PI / 2 - std::atan(
-            (end_point.y - initial_point.y) / (end_point.x - initial_point.x));
+        const float angle = PI / 2 - // Пи/2 потому что у sfml ордината идет вниз
+            std::atan((end_point.y - initial_point.y) / (end_point.x - initial_point.x));
         const float cos = std::cos(angle);
         const float sin = std::sin(angle);
-        const float cos_angle_offset = LABEL_OFFSET * cos;
-        // r * cos - полярные координаты
+        const float cos_angle_offset = LABEL_OFFSET * cos; // r * cos - полярные координаты
         const float sin_angle_offset = LABEL_OFFSET * sin;
         return {
             get_offset_y(left_orientation,
@@ -161,11 +158,6 @@ struct doubleEdgeShape : public edgeShape
 
     /**
      * Изготавливает сдвинутый шейп прямой дуги от старта к концу
-     * @param label Надпись для прямой дуги
-     * @param initial_point Начальная точка целого шейпа
-     * @param end_point Конечная точка целого шейпа
-     * @param color Цвет
-     * @param width Ширина
      */
     static edgeShape create_forward_edge(std::string&& label,
                                          const point2D initial_point,
@@ -173,7 +165,6 @@ struct doubleEdgeShape : public edgeShape
                                          const shapeColor color,
                                          const float width)
     {
-        // The arrow is "from left to right"
         const bool left_orientation = end_point.x > initial_point.x;
         const float angle = PI / 2 - std::atan(
             (end_point.y - initial_point.y) / (end_point.x - initial_point.x));
@@ -203,12 +194,6 @@ struct doubleEdgeShape : public edgeShape
 
     /**
      * Изготавливает сдвинутый шейп обратной дуги от конца к началу
-     * @param label Надпись для обратной дуги
-     * @param initial_point Начальная точка целого шейпа
-     * @param end_point Конечная точка целого шейпа
-     * @param color Цвет
-     * @param width Ширина
-     * @return Дуга от конца к началу
      */
     static edgeShape create_backward_edge(std::string&& label,
                                           const point2D initial_point,
@@ -216,7 +201,6 @@ struct doubleEdgeShape : public edgeShape
                                           const shapeColor color,
                                           const float width)
     {
-        // The arrow is "from left to right"
         const bool left_orientation = end_point.x > initial_point.x;
         const float angle = PI / 2 - std::atan(
             (end_point.y - initial_point.y) / (end_point.x - initial_point.x));
@@ -286,7 +270,6 @@ struct nodeShape final : public shape2D
 
     /**
      * Получить все ассоциированные ID графических элементов
-     * @return Список ассоциированных ID графических элементов
      */
     std::vector<unsigned int> get_id_list() const override
     {

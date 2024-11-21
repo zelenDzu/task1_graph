@@ -1,5 +1,12 @@
 #include "other/algorithm.h"
 
+inline static void console_pause()
+{
+    std::string pause;
+    std::cout << "\nНажмите клавишу для продолжения...";
+    std::cin >> pause;
+}
+
 bool stack::is_empty() const
 {
     return top == nullptr;

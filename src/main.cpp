@@ -14,7 +14,7 @@ int main(int argc, char** argv)
 
 
     constexpr int count = 7;
-    auto g = new graph(count);
+    auto g = new graph(&engine, count);
     g->add_edge_flow(0, 1, 0, 3);
     g->add_edge_flow(0, 3, 0, 3);
     g->add_edge_flow(1, 2, 0, 4);
@@ -34,13 +34,13 @@ int main(int argc, char** argv)
         }
     )->step();
 
-    edge* toRed = g->nodes[0]->edges[0];
+   /* edge* toRed = g->nodes[0]->edges[0];
     dynamic_cast<edgeDataFlow*>(toRed->data)->flow = 25;
     engine.with_commands({
         factory.get_update_edge_flow_label_command(*toRed),
         factory.get_recolor_edge_to_red_command(*toRed)
-    })->step();
+    })->step();*/
     g->maximize_flow();
-    g->show();
+    g->show_data();
     return 0;
 }

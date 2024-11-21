@@ -2,11 +2,10 @@
 #include <cmath>
 
 /**
-* Get the X-axes applied offset
- * @param left_orientation The arrow is from left to right
- * @param base The basic point to offset
- * @param offset Offset
- * @return Applied X-offset to basic point
+*  Получает сдвиг по X
+ * @param left_orientation Стрелка смотрит слева направо
+ * @param base Точка начала сдвига
+ * @param offset Сдвиг
  */
 inline float get_offset_x(const bool left_orientation,
                           const float base,
@@ -16,11 +15,10 @@ inline float get_offset_x(const bool left_orientation,
 }
 
 /**
- * Get the Y-axes applied offset
- * @param left_orientation The arrow is from left to right
- * @param base The basic point to offset
- * @param offset Offset
- * @return Applied Y-offset to basic point
+ * Получает сдвиг по Y
+ * @param left_orientation Стрелка смотрит слева направо
+ * @param base Точка начала сдвига
+ * @param offset Сдвиг
  */
 inline float get_offset_y(const bool left_orientation,
                           const float base,

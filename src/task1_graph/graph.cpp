@@ -3,7 +3,11 @@
 #include <map>
 #include <set>
 
-graph::graph(const unsigned int nodes_count)
+graph::graph(graphDrawerEngine* engine, 
+    drawerCommandFactory* factory, 
+    const unsigned int nodes_count) 
+    : engine{ engine },
+    factory { factory}
 {
     for (unsigned int i = 0u; i < nodes_count; i++)
     {
@@ -13,7 +17,10 @@ graph::graph(const unsigned int nodes_count)
     end = nodes.back();
 }
 
-graph::graph(const unsigned int nodes_count, const graph_type type) : graph(nodes_count)
+graph::graph(graphDrawerEngine* engine, 
+    drawerCommandFactory* factory, 
+    const unsigned int nodes_count, 
+    const graph_type type) : graph(engine, factory, nodes_count)
 {
     this->type = type;
 }
@@ -77,7 +84,7 @@ void graph::clear_edges()
     }
 }
 
-void graph::show() const
+void graph::show_data() const
 {
     std::cout << "\n\nNodes count: " << nodes.size();
     for (const node* v : nodes)
@@ -147,15 +154,15 @@ stack* graph::find_shortest_path(const unsigned int from,
 {
     node* n_from = nodes[from];
     node* n_to = nodes[to];
-    stack* path = new stack(); // final answer
-    queue* q = new queue(); // queue of nodes to check
+    stack* path = new stack(); // итоговый путь
+    queue* q = new queue(); // очередь из нод на проверку
     std::vector<int> explored = std::vector<int>(nodes.size());
-    // 0 if node not explored, 1 otherwise
+    // 0 если нода не обследована, 1 иначе
     q->enqueue(from, nullptr);
     explored[from] = 1;
     while (!q->is_empty())
     {
-        s_node* v = q->dequeue(); // current node to check
+        s_node* v = q->dequeue(); // текущая нода на проверку
         if (v->val == to)
         {
             do
@@ -212,8 +219,8 @@ void graph::apply_augmenting_path(const stack* path, const graph* res_net)
 
     while (v->next)
     {
-        const int from = v->val;
-        const int to = v->next->val;
+        const unsigned int from = v->val;
+        const unsigned int to = v->next->val;
         const edge* e = res_net->get_edge(from, to);
         if (const int value = dynamic_cast<edgeDataSingle*>(e->data)->value;
             value < min_val)
@@ -226,25 +233,39 @@ void graph::apply_augmenting_path(const stack* path, const graph* res_net)
     v = path->top;
     while (v->next)
     {
-        const int from = v->val;
-        const int to = v->next->val;
-        // TODO: unsigned int здесь будет корректен? Если это ID, то да
-        if (const edge* orig_edge = get_edge(from, to))
+        const unsigned int from = v->val;
+        const unsigned int to = v->next->val;
+        if (edge* orig_edge = get_edge(from, to))
         {
             dynamic_cast<edgeDataFlow*>(orig_edge->data)->flow += min_val;
+            update_flow_edge(orig_edge);
         }
         else
         {
             orig_edge = get_edge(to, from);
             dynamic_cast<edgeDataFlow*>(orig_edge->data)->flow -= min_val;
+            update_flow_edge(orig_edge);
         }
         v = v->next;
     }
 }
 
+void graph::update_flow_edge(edge* orig_edge)
+{
+    engine->with_commands({
+                factory->get_update_edge_flow_label_command(*orig_edge),
+                factory->get_recolor_edge_to_red_command(*orig_edge)
+        })->step();
+    console_pause();
+    engine->with_commands({
+        factory->get_recolor_edge_to_default_command(*orig_edge)
+        })->step();
+}
+
 void graph::maximize_flow()
 {
-    graph* res_net = new graph(nodes.size(), RESIDUAL);
+    graph* res_net = new graph(engine, factory, nodes.size(), RESIDUAL);
+    console_pause();
     res_net->start = res_net->nodes[start->id];
     res_net->end = res_net->nodes[end->id];
     stack* path = new stack();

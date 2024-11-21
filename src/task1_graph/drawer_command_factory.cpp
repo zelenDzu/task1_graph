@@ -13,34 +13,36 @@ drawerCommandFactory::get_basic_graph_create_command(
     if (engine == nullptr)
         throw ERROR_CODE;
 
+    const float offset = graph->type == RESIDUAL ? 500 : 0;
+
     std::map<nodeShape*, node*> nodes;
     std::map<node*, nodeShape*> nodes_reverse;
     std::map<edgeShape*, edge*> edges;
     std::map<doubleEdgeShape*, edge*> double_edges;
 
-    // Sorted Set of unique nodes and edges
+    // Сортированные списки уникальных нод и ребер
     const std::vector<node*> graph_nodes{std::move(graph->get_all_nodes())};
     const std::vector<edge*> graph_edges{std::move(graph->get_all_edges())};
 
     const unsigned int size = graph_nodes.size();
 
-    // First node
+    // Первая нода
     std::string first_node_label(1, alphabet[0]);
     const auto first_node = new nodeShape(
         std::move(first_node_label),
-        point2D(X_CENTER - WIDTH(size) - OFFSET, Y_CENTER),
+        point2D(X_CENTER - WIDTH(size) - OFFSET, Y_CENTER(offset)),
         DEFAULT,
         BASIC_NODE_RADIUS);
     nodes[first_node] = graph_nodes[0];
     nodes_reverse[graph_nodes[0]] = first_node;
 
-    // Other nodes
+    // Срединные ноды
     for (unsigned int i = 1u; i < size - 1u; i++)
     {
         const point2D point{
             X_CENTER + WIDTH(size) * std::cos(
                 static_cast<float>(i) * THETA(size)),
-            Y_CENTER + HEIGHT(size) * std::sin(
+            Y_CENTER(offset) + HEIGHT(size) * std::sin(
                 static_cast<float>(i) * THETA(size))
         };
 
@@ -54,17 +56,17 @@ drawerCommandFactory::get_basic_graph_create_command(
         nodes_reverse[graph_nodes[i]] = i_node;
     }
 
-    // Last node
+    // Последняя нода
     std::string last_node_label(1, alphabet[size - 1]);
     const auto last_node = new nodeShape(
         std::move(last_node_label),
-        point2D(X_CENTER + WIDTH(size) + OFFSET, Y_CENTER),
+        point2D(X_CENTER + WIDTH(size) + OFFSET, Y_CENTER(offset)),
         DEFAULT,
         BASIC_NODE_RADIUS);
     nodes[last_node] = graph_nodes[size - 1];
     nodes_reverse[graph_nodes[size - 1]] = last_node;
 
-    // Edges
+    // Ребра
     for (unsigned int i = 0u; i < graph_edges.size(); i++)
     {
         const auto current_edge = graph_edges[i];
