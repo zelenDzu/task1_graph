@@ -2,6 +2,13 @@
 #include <iostream>
 #include <vector>
 
+inline static void console_pause()
+{
+    std::string pause;
+    std::cout << "\n������� ������� ��� �����������...";
+    std::cin >> pause;
+}
+
 inline static std::string alphabet{"ABCDEFGHIJKLMNOPQRSTUVWXYZ"};
 
 inline static void console_pause();

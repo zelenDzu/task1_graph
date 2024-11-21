@@ -14,7 +14,7 @@ int main(int argc, char** argv)
 
 
     constexpr int count = 7;
-    auto g = new graph(&engine, count); //TODO ЗДЕСЬ КАКАШКА с конструктором
+    auto g = new graph(&engine, &factory, count); //TODO ЗДЕСЬ КАКАШКА с конструктором
     g->add_edge_flow(0, 1, 0, 3);
     g->add_edge_flow(0, 3, 0, 3);
     g->add_edge_flow(1, 2, 0, 4);
