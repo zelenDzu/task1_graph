@@ -6,6 +6,28 @@
 
 #define ERROR_CODE 1
 
+const drawerDeleteCommand* 
+drawerCommandFactory::get_graph_delete_command(
+    const graph* graph) const
+{
+    if (engine == nullptr)
+        throw ERROR_CODE;
+
+    std::vector<unsigned int> shapes_ids;
+
+    for (auto v : graph->nodes)
+    {
+        for (auto e : v->edges)
+        {
+            shapes_ids.push_back(e->engine_id);
+        }
+        shapes_ids.push_back(v->engine_id);
+    }   
+
+    return new drawerDeleteCommand(engine,
+                                   std::move(shapes_ids));
+}
+
 const drawerCreateGraphCommand*
 drawerCommandFactory::get_basic_graph_create_command(
     const graph* graph) const
@@ -41,9 +63,9 @@ drawerCommandFactory::get_basic_graph_create_command(
     {
         const point2D point{
             X_CENTER + WIDTH(size) * std::cos(
-                static_cast<float>(i) * THETA(size)),
+                static_cast<float>(i + 1) * THETA(size)),
             Y_CENTER(offset) + HEIGHT(size) * std::sin(
-                static_cast<float>(i) * THETA(size))
+                static_cast<float>(i + 1) * THETA(size))
         };
 
         std::string i_node_label(1, alphabet[i]);

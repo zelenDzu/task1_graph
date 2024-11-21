@@ -20,6 +20,7 @@ void drawerDeleteCommand::execute() const
 {
     for (const unsigned int shape_id : shapes_id)
     {
+        if (!engine->get_shape(shape_id)) continue;
         std::vector<unsigned int> elements_to_erase{
             std::move(engine->get_shape(shape_id)->get_id_list())
         };
@@ -39,17 +40,17 @@ void drawerEdgeRecolorCommand::execute() const
     {
         drawer.recolor_arrow(
             dynamic_cast<edgeShape*>(engine->get_shape(shape_id))->arrow_id,
-            mark ? drawer.RED : drawer.YELLOW);
+            mark ? drawer.RED : drawer.BLUE);
     }
     else if (edge_type == BIDIRECTIONAL)
     {
         const auto edge = dynamic_cast<doubleEdgeShape*>(engine->get_shape(
             shape_id));
-        drawer.recolor_arrow(edge->arrow_id, mark ? drawer.RED : drawer.YELLOW);
+        //drawer.recolor_arrow(edge->arrow_id, mark ? drawer.RED : drawer.BLUE);
         drawer.recolor_arrow(edge->forward.arrow_id,
-                             mark ? drawer.RED : drawer.YELLOW);
+                             mark ? drawer.RED : drawer.BLUE);
         drawer.recolor_arrow(edge->backward.arrow_id,
-                             mark ? drawer.RED : drawer.YELLOW);
+                             mark ? drawer.RED : drawer.BLUE);
     }
 }
 

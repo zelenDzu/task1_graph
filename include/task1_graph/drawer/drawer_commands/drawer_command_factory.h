@@ -10,7 +10,7 @@
 #define X_CENTER 620.0f // абсцисса центра графа
 #define Y_CENTER(offset) (1020.0f - offset) // ордината центра графа
 #define OFFSET 150.0f // сдвиг для первой и последней точки
-#define BASE_WIDTH 150.0f // базовая ширина графа
+#define BASE_WIDTH 80.0f // базовая ширина графа
 #define BASE_HEIGHT 100.0f // базовая высота графа
 #define SCALE_WIDTH 30.0f // коэффициент увеличения ширины графа
 #define SCALE_HEIGHT 20.0f // коэффициент увеличения высоты графа
@@ -47,6 +47,14 @@ public:
      * @return Команда на отрисовку графа
      */
     const drawerCreateGraphCommand* get_basic_graph_create_command(
+        const graph* graph) const;
+
+    /**
+     * Изготовление команды на удаление шейпа
+     * @param graph Логический граф на удаление
+     * @return Команда на удаление
+     */
+    const drawerDeleteCommand* get_graph_delete_command(
         const graph* graph) const;
 
     /**

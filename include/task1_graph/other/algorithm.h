@@ -4,9 +4,7 @@
 
 inline static void console_pause()
 {
-    std::string pause;
-    std::cout << "\n������� ������� ��� �����������...";
-    std::cin >> pause;
+    system("PAUSE");
 }
 
 inline static std::string alphabet{"ABCDEFGHIJKLMNOPQRSTUVWXYZ"};

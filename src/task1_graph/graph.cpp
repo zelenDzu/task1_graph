@@ -118,6 +118,9 @@ void graph::show_data() const
 
 void graph::update_residual_network(graph* res_net)
 {
+    engine->with_commands({
+        factory->get_graph_delete_command(res_net)
+        })->step();
     res_net->clear_edges();
     for (const node* v : nodes)
     {
@@ -151,6 +154,9 @@ void graph::update_residual_network(graph* res_net)
             }
         }
     }
+    engine->with_commands({
+        factory->get_basic_graph_create_command(res_net)
+        })->step();
 }
 
 stack* graph::find_shortest_path(const unsigned int from,
@@ -193,6 +199,8 @@ stack* graph::find_shortest_path(const unsigned int from,
         }
         if (!has_children) delete v;
     }
+    recolor_path(path);
+
     return path;
 }
 
@@ -266,13 +274,35 @@ void graph::update_flow_edge(edge* orig_edge)
     })->step();
 }
 
+void graph::recolor_path(stack* path) const
+{
+    if (path->is_empty()) return;
+    console_pause();
+    const s_node* v = path->top;
+    while (v->next)
+    {
+        const unsigned int from = v->val;
+        const unsigned int to = v->next->val;
+        const edge* e = get_edge(from, to);
+        engine->with_commands({
+            factory->get_recolor_edge_to_red_command(*e)
+            })->step();
+        v = v->next;
+    }
+    console_pause();
+}
+
 void graph::maximize_flow()
 {
-    graph* res_net = new graph(engine, factory, nodes.size(), RESIDUAL);
     console_pause();
+    graph* res_net = new graph(engine, factory, nodes.size(), RESIDUAL);
     res_net->start = res_net->nodes[start->id];
     res_net->end = res_net->nodes[end->id];
     stack* path = new stack();
+
+    engine->with_commands({
+        factory->get_basic_graph_create_command(res_net)
+        })->step();
     do
     {
         apply_augmenting_path(path, res_net);
@@ -287,7 +317,17 @@ void graph::maximize_flow()
 
 std::vector<node*> graph::get_all_nodes() const
 {
-    return nodes;
+    std::vector<node*> result;
+    if (start != nullptr)
+        result.push_back(start);
+    for (auto nod : nodes)
+    {
+        if ((nod->id != start->id) && (nod->id != end->id))
+            result.push_back(nod);
+    }
+    if (end != nullptr)
+        result.push_back(end);
+    return result;
 }
 
 std::vector<edge*> graph::get_all_edges() const

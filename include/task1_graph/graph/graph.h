@@ -69,6 +69,8 @@ public:
 
     void update_flow_edge(edge* orig_edge);
 
+    void recolor_path(stack* path) const; 
+
     std::vector<node*> get_all_nodes() const;
 
     std::vector<edge*> get_all_edges() const;

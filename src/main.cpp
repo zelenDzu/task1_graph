@@ -14,11 +14,10 @@ int main(int argc, char** argv)
 
 
     constexpr int count = 7;
-    auto g = new graph(&engine, &factory, count); //TODO ЗДЕСЬ КАКАШКА с конструктором
+    auto g = new graph(&engine, &factory, count);
     g->add_edge_flow(0, 1, 0, 3);
-    g->add_edge_flow(0, 3, 0, 3);
     g->add_edge_flow(1, 2, 0, 4);
-    g->add_edge_flow(2, 0, 0, 3);
+    g->add_edge_flow(0, 2, 0, 3);
     g->add_edge_flow(2, 3, 0, 1);
     g->add_edge_flow(2, 4, 0, 2);
     g->add_edge_flow(3, 4, 0, 2);
@@ -33,14 +32,8 @@ int main(int argc, char** argv)
             factory.get_basic_graph_create_command(g),
         }
     )->step();
-
-   /* edge* toRed = g->nodes[0]->edges[0];
-    dynamic_cast<edgeDataFlow*>(toRed->data)->flow = 25;
-    engine.with_commands({
-        factory.get_update_edge_flow_label_command(*toRed),
-        factory.get_recolor_edge_to_red_command(*toRed)
-    })->step();*/
     g->maximize_flow();
     g->show_data();
+    system("PAUSE");
     return 0;
 }
