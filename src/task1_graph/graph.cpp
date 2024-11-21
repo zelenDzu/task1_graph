@@ -1,5 +1,8 @@
 #include "graph/graph.h"
 
+#include <map>
+#include <set>
+
 graph::graph(const unsigned int nodes_count)
 {
     for (unsigned int i = 0u; i < nodes_count; i++)
@@ -84,14 +87,12 @@ void graph::show() const
         {
             if (type == RESIDUAL)
             {
-                // TODO: dynamic_cast usage here - ошибка проектирования
                 const int value =
                     dynamic_cast<edgeDataSingle*>(e->data)->value;
                 std::cout << "\n\t" << alphabet[e->to->id] << ": " << value;
             }
             else
             {
-                // TODO: dynamic_cast usage here - ошибка проектирования
                 const edgeDataFlow* edge_data =
                     dynamic_cast<edgeDataFlow*>(e->data);
                 const int flow = edge_data->flow;
@@ -111,7 +112,6 @@ void graph::update_residual_network(graph* res_net)
     {
         for (const edge* e : v->edges)
         {
-            // TODO: dynamic_cast usage here - ошибка проектирования
             const edgeDataFlow* edge_data =
                 dynamic_cast<edgeDataFlow*>(e->data);
             const int capacity = edge_data->capacity;
@@ -151,7 +151,6 @@ stack* graph::find_shortest_path(const unsigned int from,
     queue* q = new queue(); // queue of nodes to check
     std::vector<int> explored = std::vector<int>(nodes.size());
     // 0 if node not explored, 1 otherwise
-    // TODO: Проверить на уместность unsigned int вместо int
     q->enqueue(from, nullptr);
     explored[from] = 1;
     while (!q->is_empty())
@@ -259,4 +258,60 @@ void graph::maximize_flow()
 
     delete res_net;
     delete path;
+}
+
+std::vector<node*> graph::get_all_nodes() const
+{
+    return nodes;
+}
+
+std::vector<edge*> graph::get_all_edges() const
+{
+    std::vector<edge*> result;
+    std::set<node*> used_nodes;
+    std::set<edge*> backwards;
+
+    for (node* nod : nodes)
+    {
+        for (edge* ed : nod->edges)
+        {
+            if (ed->type == BIDIRECTIONAL)
+            {
+                if (used_nodes.find(ed->to) == used_nodes.end())
+                {
+                    used_nodes.insert(ed->from);
+                    result.push_back(ed);
+                }
+                else
+                {
+                    if (edge* backward = ed->get_backward(); backward == nullptr ||
+                        backwards.find(backward) == backwards.end())
+                    {
+                        used_nodes.insert(ed->from);
+                        result.push_back(ed);
+                    }
+                    else
+                        backwards.insert(backward);
+                }
+            }
+            else
+            {
+                result.push_back(ed);
+            }
+        }
+    }
+    return result;
+}
+
+edge* edge::get_backward() const
+{
+    if (type != BIDIRECTIONAL)
+        return nullptr;
+
+    for (edge* edge : to->edges)
+    {
+        if (edge->from == to && edge->to == from)
+            return edge;
+    }
+    return nullptr;
 }
