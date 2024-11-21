@@ -1,8 +1,10 @@
 #pragma once
 #include "node.h"
 #include "other/algorithm.h"
-#include "drawer/graph_drawer_engine.h"
-#include "drawer/drawer_commands/drawer_command_factory.h"
+
+
+class graphDrawerEngine;
+class drawerCommandFactory;
 
 enum graph_type
 {
@@ -22,9 +24,14 @@ public:
 
     graph() = delete;
 
-    graph(graphDrawerEngine* engine, drawerCommandFactory* factory,  unsigned int nodes_count);
+    graph(graphDrawerEngine* engine,
+          drawerCommandFactory* factory,
+          unsigned int nodes_count);
 
-    graph(graphDrawerEngine* engine, drawerCommandFactory* factory, unsigned int nodes_count, graph_type type);
+    graph(graphDrawerEngine* engine,
+          drawerCommandFactory* factory,
+          unsigned int nodes_count,
+          graph_type type);
 
     void add_node();
 

@@ -3,11 +3,14 @@
 #include <map>
 #include <set>
 
-graph::graph(graphDrawerEngine* engine, 
-    drawerCommandFactory* factory, 
-    const unsigned int nodes_count) 
-    : engine{ engine },
-    factory { factory}
+#include "drawer/graph_drawer_engine.h"
+#include "drawer/drawer_commands/drawer_command_factory.h"
+
+graph::graph(graphDrawerEngine* engine,
+             drawerCommandFactory* factory,
+             const unsigned int nodes_count)
+    : engine{engine}
+    , factory{factory}
 {
     for (unsigned int i = 0u; i < nodes_count; i++)
     {
@@ -17,10 +20,11 @@ graph::graph(graphDrawerEngine* engine,
     end = nodes.back();
 }
 
-graph::graph(graphDrawerEngine* engine, 
-    drawerCommandFactory* factory, 
-    const unsigned int nodes_count, 
-    const graph_type type) : graph(engine, factory, nodes_count)
+graph::graph(graphDrawerEngine* engine,
+             drawerCommandFactory* factory,
+             const unsigned int nodes_count,
+             const graph_type type)
+    : graph(engine, factory, nodes_count)
 {
     this->type = type;
 }
@@ -253,13 +257,13 @@ void graph::apply_augmenting_path(const stack* path, const graph* res_net)
 void graph::update_flow_edge(edge* orig_edge)
 {
     engine->with_commands({
-                factory->get_update_edge_flow_label_command(*orig_edge),
-                factory->get_recolor_edge_to_red_command(*orig_edge)
-        })->step();
+        factory->get_update_edge_flow_label_command(*orig_edge),
+        factory->get_recolor_edge_to_red_command(*orig_edge)
+    })->step();
     console_pause();
     engine->with_commands({
         factory->get_recolor_edge_to_default_command(*orig_edge)
-        })->step();
+    })->step();
 }
 
 void graph::maximize_flow()
@@ -305,7 +309,8 @@ std::vector<edge*> graph::get_all_edges() const
                 }
                 else
                 {
-                    if (edge* backward = ed->get_backward(); backward == nullptr ||
+                    if (edge* backward = ed->get_backward(); backward == nullptr
+                        ||
                         backwards.find(backward) == backwards.end())
                     {
                         used_nodes.insert(ed->from);
