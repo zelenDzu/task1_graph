@@ -5,6 +5,8 @@
 class node
 {
 public:
+    unsigned int engine_id;
+
     unsigned int id;
     std::vector<edge*> edges;
 

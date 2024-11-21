@@ -21,6 +21,9 @@
 
 class drawerCommandFactory
 {
+    static constexpr float BASIC_EDGE_WIDTH = 4.0f;
+    static constexpr float BASIC_NODE_RADIUS = 35.0f;
+
     graphDrawerEngine* engine;
 
     drawerCommandFactory() = default;
@@ -55,9 +58,6 @@ public:
     const drawerCreateGraphCommand* get_remained_graph_create_command(
         const graph* graph) const;
 
-    const drawerCreateNodeCommand* get_node_create_command(
-        const node* graph) const;
-
     /**
      * Изготовление команды на обновления лейбла ребра
      * @param edge Ребро для обновления
@@ -81,12 +81,4 @@ public:
      */
     const drawerRecolorCommand* get_recolor_edge_to_default_command(
         const edge& edge) const;
-
-    /**
-     * Изготовление команды на удаление графа
-     * @param graph Граф для удаления
-     * @return Команда на удаление
-     */
-    const drawerDeleteCommand* get_graph_delete_command(
-        const graph* graph) const;
 };

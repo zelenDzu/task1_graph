@@ -1,5 +1,7 @@
 #include "drawer/drawer_commands/drawer_command_factory.h"
 
+#include <map>
+
 #define ERROR_CODE 1
 
 const drawerCreateGraphCommand*
@@ -9,23 +11,29 @@ drawerCommandFactory::get_basic_graph_create_command(
     if (engine == nullptr)
         throw ERROR_CODE;
 
-    constexpr float radius = 35.0f;
+    std::map<nodeShape*, node*> nodes;
+    std::map<node*, nodeShape*> nodes_reverse;
+    std::map<edgeShape*, edge*> edges;
+    std::map<doubleEdgeShape*, edge*> double_edges;
 
-    std::vector<nodeShape*> nodes;
-    std::vector<edgeShape*> edges;
-    std::vector<doubleEdgeShape*> double_edges;
-    const unsigned int size = graph->nodes.size();
+    // Sorted Set of unique nodes and edges
+    const std::vector<node*> graph_nodes{std::move(graph->get_all_nodes())};
+    const std::vector<edge*> graph_edges{std::move(graph->get_all_edges())};
+
+    const unsigned int size = graph_nodes.size();
 
     // First node
     std::string first_node_label(1, alphabet[0]);
-    nodes.push_back(new nodeShape(
+    const auto first_node = new nodeShape(
         std::move(first_node_label),
         point2D(X_CENTER - WIDTH(size) - OFFSET, Y_CENTER),
         DEFAULT,
-        radius));
+        BASIC_NODE_RADIUS);
+    nodes[first_node] = graph_nodes[0];
+    nodes_reverse[graph_nodes[0]] = first_node;
 
     // Other nodes
-    for (int i = 1; i <= COUNT(size); i++)
+    for (unsigned int i = 1u; i < size - 1u; i++)
     {
         const point2D point{
             X_CENTER + WIDTH(size) * std::cos(
@@ -35,83 +43,88 @@ drawerCommandFactory::get_basic_graph_create_command(
         };
 
         std::string i_node_label(1, alphabet[i]);
-        nodes.push_back(new nodeShape(
+        const auto i_node = new nodeShape(
             std::move(i_node_label),
             point,
             DEFAULT,
-            radius));
+            BASIC_NODE_RADIUS);
+        nodes[i_node] = graph_nodes[i];
+        nodes_reverse[graph_nodes[i]] = i_node;
     }
-    float xStart = X_CENTER - WIDTH(size) - OFFSET;
-    float yStart = Y_CENTER;
-    float xEnd = X_CENTER + WIDTH(size) * std::cos(
-        static_cast<float>(4) * THETA(size));
-    float yEnd = Y_CENTER + HEIGHT(size) * std::sin(
-        static_cast<float>(4) * THETA(size));
-
-    float angle = PI / 2 - std::atan((yEnd - yStart) / (xEnd - xStart));
-    bool left_orientation = xEnd > xStart;
-    float cos_offset = radius * std::cos(angle);
-    float sin_offset = radius * std::sin(angle);
-
-    edges.push_back(new edgeShape(graph->start->edges[0]->data->to_label(),
-                                  point2D(
-                                      get_offset_x(
-                                          left_orientation,
-                                          xStart,
-                                          sin_offset),
-                                      get_offset_x(
-                                          left_orientation,
-                                          yStart,
-                                          cos_offset)),
-                                  point2D{
-                                      get_offset_y(
-                                          left_orientation,
-                                          xEnd,
-                                          sin_offset),
-                                      get_offset_y(
-                                          left_orientation,
-                                          yEnd,
-                                          cos_offset)
-                                  },
-                                  DEFAULT,
-                                  4.0f));
-
-    // double_edges.push_back(new doubleEdgeShape("",
-    //                               point2D(
-    //                                   get_offset_x(
-    //                                       left_orientation,
-    //                                       xStart,
-    //                                       sin_offset),
-    //                                   get_offset_x(
-    //                                       left_orientation,
-    //                                       yStart,
-    //                                       cos_offset)),
-    //                               point2D{
-    //                                   get_offset_y(
-    //                                       left_orientation,
-    //                                       xEnd,
-    //                                       sin_offset),
-    //                                   get_offset_y(
-    //                                       left_orientation,
-    //                                       yEnd,
-    //                                       cos_offset)
-    //                               },
-    //                               DEFAULT,
-    //                               4.0f, "2/0", "3/0"));
 
     // Last node
-    std::string last_node_label(1, alphabet[COUNT(size) + 1]);
-    nodes.push_back(new nodeShape(
+    std::string last_node_label(1, alphabet[size - 1]);
+    const auto last_node = new nodeShape(
         std::move(last_node_label),
         point2D(X_CENTER + WIDTH(size) + OFFSET, Y_CENTER),
         DEFAULT,
-        radius));
+        BASIC_NODE_RADIUS);
+    nodes[last_node] = graph_nodes[size - 1];
+    nodes_reverse[graph_nodes[size - 1]] = last_node;
 
+    // Edges
+    for (unsigned int i = 0u; i < graph_edges.size(); i++)
+    {
+        const auto current_edge = graph_edges[i];
+        const auto start_node_shape = nodes_reverse[current_edge->from];
+        const auto end_node_shape = nodes_reverse[current_edge->to];
 
-    // тут будет return некой команды drawer_graph_create_command,
-    // которая принимает std::vector<nodeShape>&& (ноды)
-    // и std::vector<edgeShape>&& (рёбра)
-    // и std::vector<doubleEdgeShape>&& (двойные рёбра)
+        const bool left_orientation =
+            end_node_shape->initial_point.x > start_node_shape->initial_point.x;
+        const float angle = PI / 2 - atan(
+            (end_node_shape->initial_point.y -
+                start_node_shape->initial_point.y) /
+            (end_node_shape->initial_point.x -
+                start_node_shape->initial_point.x));
+        const float cos = std::cos(angle);
+        const float sin = std::sin(angle);
+        const float cos_offset = BASIC_NODE_RADIUS * cos;
+        const float sin_offset = BASIC_NODE_RADIUS * sin;
+        const point2D start_shifted_point{
+            get_offset_x(
+                left_orientation,
+                start_node_shape->initial_point.x,
+                sin_offset),
+            get_offset_x(
+                left_orientation,
+                start_node_shape->initial_point.y,
+                cos_offset)
+        };
+        const point2D end_shifted_point{
+            get_offset_y(
+                left_orientation,
+                end_node_shape->initial_point.x,
+                sin_offset),
+            get_offset_y(
+                left_orientation,
+                end_node_shape->initial_point.y,
+                cos_offset)
+        };
+
+        if (current_edge->type == DIRECTIONAL)
+        {
+            const auto edge = new edgeShape(
+                graph_edges[i]->data->to_label(),
+                start_shifted_point,
+                end_shifted_point,
+                DEFAULT,
+                BASIC_EDGE_WIDTH);
+            edges[edge] = current_edge;
+        }
+        else if (current_edge->type == BIDIRECTIONAL)
+        {
+            const auto double_edge = new doubleEdgeShape(
+                "",
+                start_shifted_point,
+                end_shifted_point,
+                DEFAULT,
+                BASIC_EDGE_WIDTH,
+                std::move(current_edge->data->to_label()),
+                std::move(current_edge->get_backward()->data->to_label()));
+            double_edges[double_edge] = current_edge;
+        }
+    }
+
     return new drawerCreateGraphCommand(engine,
                                         std::move(nodes),
                                         std::move(edges),
@@ -125,24 +138,9 @@ drawerCommandFactory::get_update_edge_flow_label_command(
     if (engine == nullptr)
         throw ERROR_CODE;
 
-    // TODO: Необходимо знать ID шейпа для заданного edge.
-    // Об этом должен знать engine через таблицу маппинга, edge не должен знать
     return new drawerUpdateLabelCommand(engine,
-                                        0u,//id
+                                        edge.engine_id,
                                         edge.data->to_label());
-}
-
-const drawerCreateNodeCommand*
-drawerCommandFactory::get_node_create_command(
-    const node* graph) const
-{
-    if (engine == nullptr)
-        throw ERROR_CODE;
-    const auto nod = new nodeShape("A",
-                                   {400.0f, 400.0f},
-                                   DEFAULT,
-                                   50.0f);
-    return new drawerCreateNodeCommand(engine, *nod);
 }
 
 const drawerRecolorCommand*
@@ -152,8 +150,7 @@ drawerCommandFactory::get_recolor_edge_to_red_command(
     if (engine == nullptr)
         throw ERROR_CODE;
 
-    // TODO: Необходимо знать ID шейпа для заданного edge
-    return new drawerRecolorCommand(engine, 0u, true);
+    return new drawerRecolorCommand(engine, edge.engine_id, true);
 }
 
 const drawerRecolorCommand*
@@ -163,17 +160,5 @@ drawerCommandFactory::get_recolor_edge_to_default_command(
     if (engine == nullptr)
         throw ERROR_CODE;
 
-    // TODO: Необходимо знать ID шейпа для заданного edge
-    return new drawerRecolorCommand(engine, 0u, false);
-}
-
-const drawerDeleteCommand* drawerCommandFactory::get_graph_delete_command(
-    const graph* graph) const
-{
-    if (engine == nullptr)
-        throw ERROR_CODE;
-
-    // TODO: Необходимо получить все ID шейпов, которые относятся к графу
-    // И положить их в vector, который отдать в аргумент конструктору ниже
-    return new drawerDeleteCommand(engine, {0u, 1u, 2u});
+    return new drawerRecolorCommand(engine, edge.engine_id, false);
 }

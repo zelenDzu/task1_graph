@@ -12,6 +12,8 @@ enum edgeType
 class edge
 {
 public:
+    unsigned int engine_id;
+
     const edgeType type;
     node* from = nullptr;
     node* to = nullptr;
@@ -28,4 +30,6 @@ public:
     }
 
     ~edge() { delete data; }
+
+    edge* get_backward() const;
 };

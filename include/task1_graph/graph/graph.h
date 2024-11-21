@@ -55,4 +55,8 @@ public:
     void apply_augmenting_path(const stack* path, const graph* res_net);
 
     void maximize_flow();
+
+    std::vector<node*> get_all_nodes() const;
+
+    std::vector<edge*> get_all_edges() const;
 };

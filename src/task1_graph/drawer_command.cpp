@@ -5,9 +5,9 @@ void drawerCreateNodeCommand::execute() const
 {
     auto& drawer = engine->get_graph_drawer();
     shape_to_create.circle_id =
-            drawer.draw_circle(shape_to_create.radius,
-                               shape_to_create.initial_point.x,
-                               shape_to_create.initial_point.y);
+        drawer.draw_circle(shape_to_create.radius,
+                           shape_to_create.initial_point.x,
+                           shape_to_create.initial_point.y);
     const point2D label_point = shape_to_create.get_label_point();
     shape_to_create.label_id =
         drawer.draw_label(shape_to_create.label,
@@ -43,64 +43,69 @@ void drawerCreateGraphCommand::execute() const
 {
     // TODO: Check color consistency on create
     graphDrawer& drawer = engine->get_graph_drawer();
-    for (nodeShape* nod : nodes_to_create)
+    for (const auto& [nod_shape, nod] : nodes_to_create)
     {
-        nod->circle_id =
-            drawer.draw_circle(nod->radius,
-                               nod->initial_point.x,
-                               nod->initial_point.y);
-        const point2D label_point = nod->get_label_point();
-        nod->label_id =
-            drawer.draw_label(nod->label,
+        nod_shape->circle_id =
+            drawer.draw_circle(nod_shape->radius,
+                               nod_shape->initial_point.x,
+                               nod_shape->initial_point.y);
+        const point2D label_point = nod_shape->get_label_point();
+        nod_shape->label_id =
+            drawer.draw_label(nod_shape->label,
                               label_point.x,
                               label_point.y);
-        nod->shape_id = engine->add_shape(nod);
+        nod_shape->shape_id = engine->add_shape(nod_shape);
+        nod->engine_id = nod_shape->shape_id;
     }
-    for (edgeShape* edge : edges_to_create)
+    for (const auto& [edge_shape, edge] : edges_to_create)
     {
-        edge->arrow_id =
-            drawer.draw_arrow(edge->initial_point.x,
-                              edge->initial_point.y,
-                              edge->end_point.x,
-                              edge->end_point.y,
-                              edge->width);
-        const point2D label_point = edge->get_label_point();
-        edge->label_id =
-            drawer.draw_label(edge->label,
+        edge_shape->arrow_id =
+            drawer.draw_arrow(edge_shape->initial_point.x,
+                              edge_shape->initial_point.y,
+                              edge_shape->end_point.x,
+                              edge_shape->end_point.y,
+                              edge_shape->width);
+        const point2D label_point = edge_shape->get_label_point();
+        edge_shape->label_id =
+            drawer.draw_label(edge_shape->label,
                               label_point.x,
                               label_point.y);
-        edge->shape_id = engine->add_shape(edge);
+        edge_shape->shape_id = engine->add_shape(edge_shape);
+        edge->engine_id = edge_shape->shape_id;
     }
-    for (doubleEdgeShape* edge : doubleEdges_to_create)
+    for (const auto& [edge_shape, edge] : doubleEdges_to_create)
     {
-        edge->forward.arrow_id =
-            drawer.draw_arrow(edge->forward.initial_point.x,
-                              edge->forward.initial_point.y,
-                              edge->forward.end_point.x,
-                              edge->forward.end_point.y,
-                              edge->width);
-        edge->backward.arrow_id =
-            drawer.draw_arrow(edge->backward.initial_point.x,
-                              edge->backward.initial_point.y,
-                              edge->backward.end_point.x,
-                              edge->backward.end_point.y,
-                              edge->width);
-        const point2D label_point = edge->get_label_point();
-        const point2D forward_label_point = edge->forward.get_label_point();
-        const point2D backward_label_point = edge->backward.get_label_point();
-        edge->label_id =
-            drawer.draw_label(edge->label,
+        edge_shape->forward.arrow_id =
+            drawer.draw_arrow(edge_shape->forward.initial_point.x,
+                              edge_shape->forward.initial_point.y,
+                              edge_shape->forward.end_point.x,
+                              edge_shape->forward.end_point.y,
+                              edge_shape->width);
+        edge_shape->backward.arrow_id =
+            drawer.draw_arrow(edge_shape->backward.initial_point.x,
+                              edge_shape->backward.initial_point.y,
+                              edge_shape->backward.end_point.x,
+                              edge_shape->backward.end_point.y,
+                              edge_shape->width);
+        const point2D label_point = edge_shape->get_label_point();
+        const point2D forward_label_point = edge_shape->forward.
+            get_label_point();
+        const point2D backward_label_point = edge_shape->backward.
+            get_label_point();
+        edge_shape->label_id =
+            drawer.draw_label(edge_shape->label,
                               label_point.x,
                               label_point.y);
-        edge->forward.label_id =
-            drawer.draw_label(edge->forward.label,
+        edge_shape->forward.label_id =
+            drawer.draw_label(edge_shape->forward.label,
                               forward_label_point.x,
                               forward_label_point.y);
-        edge->backward.label_id =
-            drawer.draw_label(edge->backward.label,
+        edge_shape->backward.label_id =
+            drawer.draw_label(edge_shape->backward.label,
                               backward_label_point.x,
                               backward_label_point.y);
-        edge->shape_id = engine->add_shape(edge);
+        edge_shape->shape_id = engine->add_shape(edge_shape);
+        edge->engine_id = edge_shape->shape_id;
     }
 }
 

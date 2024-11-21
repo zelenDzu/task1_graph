@@ -1,8 +1,11 @@
 #pragma once
+#include <map>
+
 #include "2d_space/shape.h"
+#include "graph/graph.h"
 #include <vector>
 
-class graphDrawerEngine; // forward declaration
+class graphDrawerEngine;
 
 /**
  * Команда, которая выполняется на движке
@@ -22,6 +25,7 @@ struct drawerCommand
 
     virtual void execute() const = 0;
 };
+
 // destroy
 struct drawerCreateNodeCommand : public drawerCommand
 {
@@ -29,7 +33,8 @@ struct drawerCreateNodeCommand : public drawerCommand
 
     drawerCreateNodeCommand() = delete;
 
-    drawerCreateNodeCommand(graphDrawerEngine* engine, nodeShape& shape_to_create)
+    drawerCreateNodeCommand(graphDrawerEngine* engine,
+                            nodeShape& shape_to_create)
         : drawerCommand(engine)
         , shape_to_create{shape_to_create}
     {
@@ -75,16 +80,16 @@ struct drawerRecolorCommand : public drawerCommand
 
 struct drawerCreateGraphCommand : public drawerCommand
 {
-    std::vector<nodeShape*> nodes_to_create;
-    std::vector<edgeShape*> edges_to_create;
-    std::vector<doubleEdgeShape*> doubleEdges_to_create;
+    std::map<nodeShape*, node*> nodes_to_create;
+    std::map<edgeShape*, edge*> edges_to_create;
+    std::map<doubleEdgeShape*, edge*> doubleEdges_to_create;
 
     drawerCreateGraphCommand() = delete;
 
     drawerCreateGraphCommand(graphDrawerEngine* engine,
-                             std::vector<nodeShape*>&& nodes_to_create,
-                             std::vector<edgeShape*>&& edges_to_create,
-                             std::vector<doubleEdgeShape*>&&
+                             std::map<nodeShape*, node*>&& nodes_to_create,
+                             std::map<edgeShape*, edge*>&& edges_to_create,
+                             std::map<doubleEdgeShape*, edge*>&&
                              doubleEdges_to_create)
         : drawerCommand(engine)
         , nodes_to_create{std::move(nodes_to_create)}
@@ -114,4 +119,3 @@ struct drawerUpdateLabelCommand : public drawerCommand
 
     void execute() const override;
 };
-

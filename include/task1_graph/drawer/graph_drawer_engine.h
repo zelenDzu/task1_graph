@@ -43,7 +43,8 @@ public:
 
     void remove_shape(unsigned int index);
 
-    graphDrawerEngine* with_commands(std::vector<const drawerCommand*>&& commands);
+    graphDrawerEngine* with_commands(
+        std::vector<const drawerCommand*>&& commands);
 
     void step();
 };
