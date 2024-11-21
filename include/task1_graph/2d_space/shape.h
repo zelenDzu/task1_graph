@@ -26,7 +26,7 @@ struct shape2D
     shapeColor color;
 
     shape2D() = delete;
-    
+
     shape2D(std::string&& label,
             const point2D initial_point)
         : label{label}
@@ -101,7 +101,8 @@ struct edgeShape : public shape2D
             (end_point.y - initial_point.y) / (end_point.x - initial_point.x));
         const float cos = std::cos(angle);
         const float sin = std::sin(angle);
-        const float cos_angle_offset = LABEL_OFFSET * cos; // r * cos - полярные координаты
+        const float cos_angle_offset = LABEL_OFFSET * cos;
+        // r * cos - полярные координаты
         const float sin_angle_offset = LABEL_OFFSET * sin;
         return {
             get_offset_y(left_orientation,
@@ -174,7 +175,7 @@ struct doubleEdgeShape : public edgeShape
     {
         // The arrow is "from left to right"
         const bool left_orientation = end_point.x > initial_point.x;
-        const float angle = 3.1415f/2 - std::atan(
+        const float angle = PI / 2 - std::atan(
             (end_point.y - initial_point.y) / (end_point.x - initial_point.x));
         const float cos = std::cos(angle);
         const float sin = std::sin(angle);
@@ -217,7 +218,7 @@ struct doubleEdgeShape : public edgeShape
     {
         // The arrow is "from left to right"
         const bool left_orientation = end_point.x > initial_point.x;
-        const float angle = 3.1415f/2 - std::atan(
+        const float angle = PI / 2 - std::atan(
             (end_point.y - initial_point.y) / (end_point.x - initial_point.x));
         const float cos = std::cos(angle);
         const float sin = std::sin(angle);
