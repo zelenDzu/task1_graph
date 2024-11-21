@@ -62,6 +62,7 @@ graphDrawerEngine* graphDrawerEngine::with_commands(std::vector<const drawerComm
 
 void graphDrawerEngine::step()
 {
+    // если в sfml закрыли окно
     if (drawer->shutdownFlag)
     {
         clear_cache();

@@ -6,11 +6,10 @@
 #include <vector>
 
 /**
- * Get the X-axes applied offset
- * @param left_orientation The arrow is from left to right
- * @param base The basic point to offset
- * @param offset Offset
- * @return Applied X-offset to basic point
+ * Получает абсциссу сдвинутой точки
+ * @param left_orientation Стрелка идет слева направо
+ * @param base Базовая точка
+ * @param offset Сдвиг
  */
 inline float get_offset_x(const bool left_orientation,
                           const float base,
@@ -20,11 +19,10 @@ inline float get_offset_x(const bool left_orientation,
 }
 
 /**
- * Get the Y-axes applied offset
- * @param left_orientation The arrow is from left to right
- * @param base The basic point to offset
- * @param offset Offset
- * @return Applied Y-offset to basic point
+ * Получает ординату сдвинутой точки
+ * @param left_orientation Стрелка идет слева направо
+ * @param base Базовая точка
+ * @param offset Сдвиг
  */
 inline float get_offset_y(const bool left_orientation,
                           const float base,
@@ -44,8 +42,8 @@ enum shapeColor
  */
 struct shape2D
 {
-    unsigned int shape_id; //local
-    unsigned int label_id; //sfml
+    unsigned int shape_id; // локальный id шейпа
+    unsigned int label_id; // sfml id объекта Text, привязанного к шейпу
 
     std::string label;
     point2D initial_point;
@@ -69,6 +67,7 @@ struct shape2D
     {
     }
 
+    // noexcept нужен чтоб vector не выдавал ошибок и при перемещении vector чтоб он использовал конструктор перемещения
     virtual ~shape2D() noexcept = default;
 
     /**
@@ -82,7 +81,6 @@ struct shape2D
 
     /**
      * Получить все ассоциированные ID графических элементов
-     * @return Список ассоциированных ID графических элементов
      */
     virtual std::vector<unsigned int> get_id_list() const
     {
@@ -91,13 +89,13 @@ struct shape2D
 };
 
 /**
- * Обыкновенный шейп дуги
+ * Шейп одинарной дуги
 */
 struct edgeShape : public shape2D
 {
     static constexpr float LABEL_OFFSET{15.0f};
 
-    unsigned int arrow_id; //sfml
+    unsigned int arrow_id; // id для sfml объекта
 
     float width;
     point2D end_point;
@@ -116,18 +114,18 @@ struct edgeShape : public shape2D
     }
 
     /**
-     * Определить положение метки названия.
-     * @return Положене метки названия
+     * Определить положение лэйбла
      */
     point2D get_label_point() const override
     {
         const point2D middle_point = end_point.get_middle_point(initial_point);
         const bool left_orientation = end_point.x > initial_point.x;
+        // Пи/2 потому что у sfml ордината идет вниз
         const float angle = 3.1415f/2 - std::atan(
             (end_point.y - initial_point.y) / (end_point.x - initial_point.x));
         const float cos = std::cos(angle);
         const float sin = std::sin(angle);
-        const float cos_angle_offset = LABEL_OFFSET * cos; // r * cos - polar
+        const float cos_angle_offset = LABEL_OFFSET * cos; // r * cos - полярные координаты
         const float sin_angle_offset = LABEL_OFFSET * sin;
         return {
             get_offset_y(left_orientation,
@@ -141,7 +139,6 @@ struct edgeShape : public shape2D
 
     /**
      * Получить все ассоциированные ID графических элементов
-     * @return Список ассоциированных ID графических элементов
      */
     std::vector<unsigned int> get_id_list() const override
     {
@@ -149,6 +146,9 @@ struct edgeShape : public shape2D
     }
 };
 
+/**
+ * Шейп двойной дуги
+*/
 struct doubleEdgeShape : public edgeShape
 {
     static constexpr float SHIFT_BETWEEN_EDGES{15.0f};
@@ -189,7 +189,6 @@ struct doubleEdgeShape : public edgeShape
      * @param end_point Конечная точка целого шейпа
      * @param color Цвет
      * @param width Ширина
-     * @return Дуга от старта к концу
      */
     static edgeShape create_forward_edge(std::string&& label,
                                          const point2D initial_point,
@@ -269,8 +268,7 @@ struct doubleEdgeShape : public edgeShape
     }
 
     /**
-     * Определить положение метки названия. По умолчанию middle_point
-     * @return Положене метки названия
+     * Определить положение метки названия
      */
     point2D get_label_point() const override
     {
@@ -279,7 +277,6 @@ struct doubleEdgeShape : public edgeShape
 
     /**
      * Получить все ассоциированные ID графических элементов
-     * @return Список ассоциированных ID графических элементов
      */
     std::vector<unsigned int> get_id_list() const override
     {
@@ -291,11 +288,11 @@ struct doubleEdgeShape : public edgeShape
 };
 
 /**
- * Обыкновенный шейп нода
+ * Шейп нода
  */
 struct nodeShape final : public shape2D
 {
-    unsigned int circle_id; //sfml
+    unsigned int circle_id; // id для sfml объекта
 
     float radius;
 

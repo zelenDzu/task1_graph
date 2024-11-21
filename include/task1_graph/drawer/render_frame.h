@@ -1,6 +1,7 @@
 #pragma once
 #include <map>
 
+// хранилище графических sfml примитивов
 class renderFrame
 {
     unsigned int last_index{0};

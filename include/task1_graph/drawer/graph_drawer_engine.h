@@ -10,7 +10,7 @@
  */
 class graphDrawerEngine
 {
-    std::vector<const drawerCommand*> drawing_cache{};
+    std::vector<const drawerCommand*> drawing_cache{}; 
 
     std::map<unsigned int, shape2D*> shape_context{};
 

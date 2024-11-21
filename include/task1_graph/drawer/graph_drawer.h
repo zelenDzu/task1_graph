@@ -20,7 +20,7 @@ class graphDrawer
 public:
     const sf::Color BLUE = sf::Color::Blue;
 
-    const sf::Color YELLOW = sf::Color::Green;
+    const sf::Color YELLOW = sf::Color::Yellow;
 
     const sf::Color RED = sf::Color::Red;
 

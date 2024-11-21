@@ -46,7 +46,7 @@ void graphDrawer::create_window()
         window = nullptr;
 
     sf::ContextSettings settings;
-    settings.antialiasingLevel = 8;
+    settings.antialiasingLevel = 8; // уровень сглаживания
     window = new sf::RenderWindow({1280u, 1024u},
                                   "Main Window",
                                   sf::Style::Default,
@@ -136,9 +136,6 @@ unsigned int graphDrawer::draw_arrow(const float xStart,
                                      const sf::Color& color)
 {
     auto* arrow = new sf::VertexArray(sf::Triangles, N_ARROW_SHAPE_POINTS);
-    //const auto arrow = new sf::ConvexShape();
-    //arrow->setPointCount(N_ARROW_SHAPE_POINTS);
-    // The arrow is "from left to right"
     const bool left_orientation = xEnd > xStart;
     const float angle = 3.1415f / 2 - std::atan(
         (yEnd - yStart) / (xEnd - xStart));
