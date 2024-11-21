@@ -5,14 +5,18 @@
 
 int main(int argc, char** argv)
 {
+    // Создание фабрики по изготовлению команд для отрисовки
     auto& factory = drawerCommandFactory::get_instance();
+    // Создание движка 
     auto& engine = graphDrawerEngine::get_instance();
+    // Создание окна рендера
     auto& renderer = graphDrawer::get_instance();
     engine.set_graph_drawer(renderer);
     factory.set_engine(&engine);
     renderer.create_window();
 
 
+    // Инициализация графа
     constexpr int count = 7;
     auto g = new graph(&engine, &factory, count);
     g->add_edge_flow(0, 1, 0, 3);
@@ -22,18 +26,13 @@ int main(int argc, char** argv)
     g->add_edge_flow(2, 4, 0, 2);
     g->add_edge_flow(3, 4, 0, 2);
     g->add_edge_flow(3, 5, 0, 6);
-    g->add_edge_flow(4, 1, 0, 1);
+    g->add_edge_flow(1, 4, 0, 1);
     g->add_edge_flow(4, 6, 0, 1);
     g->add_edge_flow(5, 6, 0, 9);
     g->set_start(0);
     g->set_end(count - 1);
 
-    engine.with_commands({
-            factory.get_basic_graph_create_command(g),
-        }
-    )->step();
     g->maximize_flow();
-    g->show_data();
     system("PAUSE");
     return 0;
 }

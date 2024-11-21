@@ -294,6 +294,10 @@ void graph::recolor_path(stack* path) const
 
 void graph::maximize_flow()
 {
+    engine->with_commands({
+            factory->get_basic_graph_create_command(this),
+        }
+    )->step();
     console_pause();
     graph* res_net = new graph(engine, factory, nodes.size(), RESIDUAL);
     res_net->start = res_net->nodes[start->id];
