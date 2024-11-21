@@ -19,6 +19,7 @@ include_directories(include/task1_graph)
 add_executable(task1_graph
         include/task1_graph/2d_space/point.h
         include/task1_graph/2d_space/shape.h
+        include/task1_graph/2d_space/geometry_resolver.h
         include/task1_graph/drawer/drawer_commands/drawer_command.h
         include/task1_graph/drawer/drawer_commands/drawer_command_factory.h
         include/task1_graph/drawer/graph_drawer.h

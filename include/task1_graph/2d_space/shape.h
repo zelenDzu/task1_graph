@@ -1,35 +1,11 @@
 #pragma once
-#include <cmath>
 
+#include "2d_space/geometry_resolver.h"
 #include "point.h"
 #include <string>
 #include <vector>
 
-/**
- * Получает абсциссу сдвинутой точки
- * @param left_orientation Стрелка идет слева направо
- * @param base Базовая точка
- * @param offset Сдвиг
- */
-inline float get_offset_x(const bool left_orientation,
-                          const float base,
-                          const float offset)
-{
-    return left_orientation ? base + offset : base - offset;
-}
-
-/**
- * Получает ординату сдвинутой точки
- * @param left_orientation Стрелка идет слева направо
- * @param base Базовая точка
- * @param offset Сдвиг
- */
-inline float get_offset_y(const bool left_orientation,
-                          const float base,
-                          const float offset)
-{
-    return left_orientation ? base - offset : base + offset;
-}
+#define PI 3.1415f
 
 enum shapeColor
 {
@@ -121,7 +97,7 @@ struct edgeShape : public shape2D
         const point2D middle_point = end_point.get_middle_point(initial_point);
         const bool left_orientation = end_point.x > initial_point.x;
         // Пи/2 потому что у sfml ордината идет вниз
-        const float angle = 3.1415f/2 - std::atan(
+        const float angle = PI / 2 - std::atan(
             (end_point.y - initial_point.y) / (end_point.x - initial_point.x));
         const float cos = std::cos(angle);
         const float sin = std::sin(angle);

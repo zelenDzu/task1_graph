@@ -4,7 +4,6 @@
 #include "other/algorithm.h"
 #include <cmath>
 
-#define PI 3.141592f
 #define COUNT(n) (n - 2)
 #define DEG2RAD(n) ((n * PI) / 180)
 #define RAD2DEG(n) ((n * 180) / PI)

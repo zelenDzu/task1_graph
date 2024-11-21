@@ -1,37 +1,7 @@
-#include <cmath>
-
+#include "2d_space/geometry_resolver.h"
 #include "drawer/graph_drawer.h"
 
-inline static const std::string DEFAULT_FONT{"arial.ttf"
-};
-
-/**
- * Get the X-axes applied offset
- * @param left_orientation The arrow is from left to right
- * @param base The basic point to offset
- * @param offset Offset
- * @return Applied X-offset to basic point
- */
-inline float get_offset_x(const bool left_orientation,
-                          const float base,
-                          const float offset)
-{
-    return left_orientation ? base + offset : base - offset;
-}
-
-/**
- * Get the Y-axes applied offset
- * @param left_orientation The arrow is from left to right
- * @param base The basic point to offset
- * @param offset Offset
- * @return Applied Y-offset to basic point
- */
-inline float get_offset_y(const bool left_orientation,
-                          const float base,
-                          const float offset)
-{
-    return left_orientation ? base - offset : base + offset;
-}
+inline static const std::string DEFAULT_FONT{"arial.ttf"};
 
 graphDrawer::graphDrawer()
 {
@@ -39,6 +9,11 @@ graphDrawer::graphDrawer()
 }
 
 #pragma region window_and_rendering_utilities
+#define WINDOW_WIDTH 1280u
+#define WINDOW_MAX_WIDTH 1280.f
+#define Y_INVERT(n) (WINDOW_MAX_WIDTH - n)
+#define WINDOW_HEIGHT 1024u
+#define PI 3.1415f
 
 void graphDrawer::create_window()
 {
@@ -47,7 +22,7 @@ void graphDrawer::create_window()
 
     sf::ContextSettings settings;
     settings.antialiasingLevel = 8; // ������� �����������
-    window = new sf::RenderWindow({1280u, 1024u},
+    window = new sf::RenderWindow({WINDOW_WIDTH, WINDOW_HEIGHT},
                                   "Main Window",
                                   sf::Style::Default,
                                   settings);
@@ -109,7 +84,7 @@ unsigned int graphDrawer::draw_circle(const float radius,
     const auto circle = new sf::CircleShape(radius);
     circle->setOrigin(radius, radius);
 
-    circle->setPosition(x, 1280.f - y);
+    circle->setPosition(x, Y_INVERT(y));
     circle->setFillColor(color);
     return frame.push(circle);
 }
@@ -122,7 +97,7 @@ unsigned int graphDrawer::draw_line(const float length,
                                     const sf::Color& color)
 {
     const auto line = new sf::RectangleShape({length, width});
-    line->setPosition({x, 1280.f - y});
+    line->setPosition({x, Y_INVERT(y)});
     line->setRotation(rotation);
     line->setFillColor(color);
     return frame.push(line);
@@ -137,7 +112,7 @@ unsigned int graphDrawer::draw_arrow(const float xStart,
 {
     auto* arrow = new sf::VertexArray(sf::Triangles, N_ARROW_SHAPE_POINTS);
     const bool left_orientation = xEnd > xStart;
-    const float angle = 3.1415f / 2 - std::atan(
+    const float angle = PI / 2 - std::atan(
         (yEnd - yStart) / (xEnd - xStart));
     const float cos = std::cos(angle);
     const float sin = std::sin(angle);
@@ -150,9 +125,9 @@ unsigned int graphDrawer::draw_arrow(const float xStart,
         get_offset_x(left_orientation,
                      xStart,
                      cos_angle_offset),
-        1280.f - get_offset_y(left_orientation,
-                              yStart,
-                              sin_angle_offset)
+        Y_INVERT(get_offset_y(left_orientation,
+            yStart,
+            sin_angle_offset))
     };
     // Point II
     (*arrow)[1].position =
@@ -160,9 +135,9 @@ unsigned int graphDrawer::draw_arrow(const float xStart,
         get_offset_y(left_orientation,
                      xStart,
                      cos_angle_offset),
-        1280.f - get_offset_x(left_orientation,
-                              yStart,
-                              sin_angle_offset)
+        Y_INVERT(get_offset_x(left_orientation,
+            yStart,
+            sin_angle_offset))
     };
 
     const float cos_shift_offset = ARROW_HEAD_SHIFT * cos;
@@ -181,9 +156,9 @@ unsigned int graphDrawer::draw_arrow(const float xStart,
         get_offset_y(left_orientation,
                      shifted_xEnd,
                      cos_angle_offset),
-        1280.f - get_offset_x(left_orientation,
-                              shifted_yEnd,
-                              sin_angle_offset)
+        Y_INVERT(get_offset_x(left_orientation,
+            shifted_yEnd,
+            sin_angle_offset))
     };
 
     (*arrow)[3].position = (*arrow)[0].position;
@@ -195,13 +170,13 @@ unsigned int graphDrawer::draw_arrow(const float xStart,
         get_offset_y(left_orientation,
                      shifted_xEnd,
                      cos_angle_offset * ARROW_HEAD_WIDTH_SCALE),
-        1280.f - get_offset_x(left_orientation,
-                              shifted_yEnd,
-                              sin_angle_offset * ARROW_HEAD_WIDTH_SCALE)
+        Y_INVERT(get_offset_x(left_orientation,
+            shifted_yEnd,
+            sin_angle_offset * ARROW_HEAD_WIDTH_SCALE))
     };
 
     // Point V
-    (*arrow)[7].position = {xEnd, 1280.f - yEnd};
+    (*arrow)[7].position = {xEnd, Y_INVERT(yEnd)};
 
     // Point VI
     (*arrow)[8].position =
@@ -209,9 +184,9 @@ unsigned int graphDrawer::draw_arrow(const float xStart,
         get_offset_x(left_orientation,
                      shifted_xEnd,
                      cos_angle_offset * ARROW_HEAD_WIDTH_SCALE),
-        1280.f - get_offset_y(left_orientation,
-                              shifted_yEnd,
-                              sin_angle_offset * ARROW_HEAD_WIDTH_SCALE)
+        Y_INVERT(get_offset_y(left_orientation,
+            shifted_yEnd,
+            sin_angle_offset * ARROW_HEAD_WIDTH_SCALE))
     };
 
     // Point VII
@@ -220,9 +195,9 @@ unsigned int graphDrawer::draw_arrow(const float xStart,
         get_offset_x(left_orientation,
                      shifted_xEnd,
                      cos_angle_offset),
-        1280.f - get_offset_y(left_orientation,
-                              shifted_yEnd,
-                              sin_angle_offset)
+        Y_INVERT(get_offset_y(left_orientation,
+            shifted_yEnd,
+            sin_angle_offset))
     };
 
     for (unsigned int i = 0u; i < N_ARROW_SHAPE_POINTS; i++)
@@ -236,7 +211,7 @@ unsigned int graphDrawer::draw_label(const std::string& label,
                                      const sf::Color& color)
 {
     const auto text = new sf::Text(label, font, FONT_SIZE);
-    text->setPosition(x, 1280.f - y);
+    text->setPosition(x, Y_INVERT(y));
     const sf::FloatRect rc = text->getLocalBounds();
     text->setOrigin(rc.width / 2, rc.height);
     text->setFillColor(color);
