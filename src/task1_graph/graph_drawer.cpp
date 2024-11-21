@@ -46,7 +46,7 @@ void graphDrawer::create_window()
         window = nullptr;
 
     sf::ContextSettings settings;
-    settings.antialiasingLevel = 8; // уровень сглаживания
+    settings.antialiasingLevel = 8; // пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
     window = new sf::RenderWindow({1280u, 1024u},
                                   "Main Window",
                                   sf::Style::Default,
@@ -258,6 +258,12 @@ void graphDrawer::recolor_label(const unsigned int id, const sf::Color& color)
 void graphDrawer::recolor_shape(const unsigned int id, const sf::Color& color)
 {
     frame.get_shape(id)->setFillColor(color);
+}
+
+void graphDrawer::recolor_arrow(const unsigned int id, const sf::Color& color)
+{
+    for (unsigned int i = 0u; i < N_ARROW_SHAPE_POINTS; i++)
+        (*frame.get_vertex_array(id))[i].color = color;
 }
 
 void graphDrawer::rename_label(const unsigned int id, const std::string& name)

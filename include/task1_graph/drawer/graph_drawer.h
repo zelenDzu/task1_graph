@@ -83,6 +83,8 @@ public:
 
     void recolor_shape(unsigned int id, const sf::Color& color);
 
+    void recolor_arrow(unsigned int id, const sf::Color& color);
+
     void rename_label(unsigned int id, const std::string& name);
 
     void replace_shape(unsigned int id, float x, float y);

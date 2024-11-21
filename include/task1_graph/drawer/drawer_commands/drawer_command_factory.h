@@ -71,7 +71,7 @@ public:
      * @param edge Ребро для обновления
      * @return Команда на перекраску
      */
-    const drawerRecolorCommand* get_recolor_edge_to_red_command(
+    const drawerEdgeRecolorCommand* get_recolor_edge_to_red_command(
         const edge& edge) const;
 
     /**
@@ -79,6 +79,6 @@ public:
      * @param edge Ребро для обновления
      * @return Команда на перекраску
      */
-    const drawerRecolorCommand* get_recolor_edge_to_default_command(
+    const drawerEdgeRecolorCommand* get_recolor_edge_to_default_command(
         const edge& edge) const;
 };

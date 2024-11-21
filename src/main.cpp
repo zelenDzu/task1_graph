@@ -33,7 +33,13 @@ int main(int argc, char** argv)
             factory.get_basic_graph_create_command(g),
         }
     )->step();
-    renderer.recolor_shape(13, sf::Color::Red);
+    edge* toRed = g->nodes[0]->edges[0];
+    dynamic_cast<edgeDataFlow*>(toRed->data)->flow = 25;
+    engine.with_commands({
+        factory.get_update_edge_flow_label_command(*toRed),
+        factory.get_recolor_edge_to_red_command(*toRed)
+    })->step();
+    //engine.with_commands({})->step();
     renderer.render();
     g->maximize_flow();
     g->show();

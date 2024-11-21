@@ -32,16 +32,29 @@ void drawerDeleteCommand::execute() const
     }
 }
 
-void drawerRecolorCommand::execute() const
+void drawerEdgeRecolorCommand::execute() const
 {
     graphDrawer& drawer = engine->get_graph_drawer();
-    drawer.recolor_shape(shape_id,
-                         mark ? drawer.RED : drawer.YELLOW);
+    if (edge_type == DIRECTIONAL)
+    {
+        drawer.recolor_arrow(
+            dynamic_cast<edgeShape*>(engine->get_shape(shape_id))->arrow_id,
+            mark ? drawer.RED : drawer.YELLOW);
+    }
+    else if (edge_type == BIDIRECTIONAL)
+    {
+        const auto edge = dynamic_cast<doubleEdgeShape*>(engine->get_shape(
+            shape_id));
+        drawer.recolor_arrow(edge->arrow_id, mark ? drawer.RED : drawer.YELLOW);
+        drawer.recolor_arrow(edge->forward.arrow_id,
+                             mark ? drawer.RED : drawer.YELLOW);
+        drawer.recolor_arrow(edge->backward.arrow_id,
+                             mark ? drawer.RED : drawer.YELLOW);
+    }
 }
 
 void drawerCreateGraphCommand::execute() const
 {
-    // TODO: Check color consistency on create
     graphDrawer& drawer = engine->get_graph_drawer();
     for (const auto& [nod_shape, nod] : nodes_to_create)
     {
@@ -106,6 +119,12 @@ void drawerCreateGraphCommand::execute() const
                               backward_label_point.y);
         edge_shape->shape_id = engine->add_shape(edge_shape);
         edge->engine_id = edge_shape->shape_id;
+        if (edge->type == BIDIRECTIONAL)
+        {
+            if (const auto backward = edge->get_backward();
+                backward != nullptr)
+                backward->engine_id = edge->engine_id;
+        }
     }
 }
 

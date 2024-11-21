@@ -2,6 +2,8 @@
 
 #include <map>
 
+#include "drawer/graph_drawer_engine.h"
+
 #define ERROR_CODE 1
 
 const drawerCreateGraphCommand*
@@ -143,22 +145,24 @@ drawerCommandFactory::get_update_edge_flow_label_command(
                                         edge.data->to_label());
 }
 
-const drawerRecolorCommand*
+const drawerEdgeRecolorCommand*
 drawerCommandFactory::get_recolor_edge_to_red_command(
     const edge& edge) const
 {
     if (engine == nullptr)
         throw ERROR_CODE;
 
-    return new drawerRecolorCommand(engine, edge.engine_id, true);
+    return new
+        drawerEdgeRecolorCommand(engine, edge.engine_id, true, edge.type);
 }
 
-const drawerRecolorCommand*
+const drawerEdgeRecolorCommand*
 drawerCommandFactory::get_recolor_edge_to_default_command(
     const edge& edge) const
 {
     if (engine == nullptr)
         throw ERROR_CODE;
 
-    return new drawerRecolorCommand(engine, edge.engine_id, false);
+    return new
+        drawerEdgeRecolorCommand(engine, edge.engine_id, false, edge.type);
 }

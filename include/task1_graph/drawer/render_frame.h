@@ -1,7 +1,7 @@
 #pragma once
 #include <map>
 
-// хранилище графических sfml примитивов
+// пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ sfml пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
 class renderFrame
 {
     unsigned int last_index{0};
@@ -27,6 +27,11 @@ public:
     sf::Shape* get_shape(const unsigned int id)
     {
         return dynamic_cast<sf::Shape*>(drawn_context[id]);
+    }
+
+    sf::VertexArray* get_vertex_array(const unsigned int id)
+    {
+        return dynamic_cast<sf::VertexArray*>(drawn_context[id]);
     }
 
     unsigned int push(sf::Drawable* drawable)

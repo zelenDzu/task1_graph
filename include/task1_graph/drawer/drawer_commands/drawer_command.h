@@ -59,18 +59,21 @@ struct drawerDeleteCommand : public drawerCommand
     void execute() const override;
 };
 
-struct drawerRecolorCommand : public drawerCommand
+struct drawerEdgeRecolorCommand : public drawerCommand
 {
     unsigned int shape_id;
+    edgeType edge_type;
     bool mark;
 
-    drawerRecolorCommand() = delete;
+    drawerEdgeRecolorCommand() = delete;
 
-    drawerRecolorCommand(graphDrawerEngine* engine,
+    drawerEdgeRecolorCommand(graphDrawerEngine* engine,
                          const unsigned int shape_id,
-                         const bool mark)
+                         const bool mark,
+                         const edgeType edge_type)
         : drawerCommand(engine)
         , shape_id{shape_id}
+        , edge_type{edge_type}
         , mark{mark}
     {
     }
